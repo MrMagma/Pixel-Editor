@@ -18994,11 +18994,17 @@ module.exports = require('./lib/React');
 var React = require("react");
 var ReactDOM = require("react-dom");
 
-var githubLink = React.createElement(
-  "a",
-  { href: "https://github.com" },
-  "Github"
-);
+var mainContainer = document.getElementById("main-container");
 
-ReactDOM.render(githubLink, document.body);
+var PixelCanvas = React.createClass({
+    displayName: "PixelCanvas",
+    render: function render() {
+        return React.createElement("canvas", { style: {
+                width: this.props.width,
+                height: this.props.height
+            } });
+    }
+});
+
+ReactDOM.render(React.createElement(PixelCanvas, { width: "100px", height: "100px" }), mainContainer);
 },{"react":158,"react-dom":29}]},{},[159])
