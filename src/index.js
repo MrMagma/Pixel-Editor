@@ -1,0 +1,1 @@
+require("./View/Canvas.jsx");
