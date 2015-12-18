@@ -2,22 +2,35 @@
 
 var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
 var EventEmitter = require('events').EventEmitter;
+var PixelImage = require("../PixelImage/PixelImage.js");
 
-var pixels = [[0]];
+var pixelImage = new PixelImage();
 
-var CanvasStore = {
+var events = {
     resize: function resize(_ref) {
-        var _ref$width = _ref.width;
-        var width = _ref$width === undefined ? pixels.length : _ref$width;
-        var _ref$height = _ref.height;
-        var height = _ref$height === undefined ? pixels[0].length : _ref$height;
+        var width = _ref.width;
+        var height = _ref.height;
+
+        if (width > 0) {
+            // Set the width of the pixels array
+        }
+        if (height > 0) {
+            // Set the height of the pixels array
+        }
+    },
+    setpixel: function setpixel(_ref2) {
+        var x = _ref2.x;
+        var y = _ref2.y;
+        var color = _ref2.color;
     }
 };
+
+var CanvasStore = {};
 
 _.extendOwn(CanvasStore, EventEmitter.prototype, {});
 
 CanvasDispatcher.register(function (action) {
-    if (CanvasStore[action.type]) {
-        CanvasStore[action.type](action);
+    if (events[action.type]) {
+        events[action.type](action);
     }
 });

@@ -1,16 +1,20 @@
 var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
 var EventEmitter = require('events').EventEmitter;
+var PixelImage = require("../PixelImage/PixelImage.js");
 
-var pixels = [[0]];
+var pixelImage = new PixelImage();
 
 var events = {
-    resize({width = pixels.length, height = pixels[0].length}) {
+    resize({width, height}) {
         if (width > 0) {
             // Set the width of the pixels array
         }
         if (height > 0) {
             // Set the height of the pixels array
         }
+    },
+    setpixel({x, y, color}) {
+        
     }
 };
 
