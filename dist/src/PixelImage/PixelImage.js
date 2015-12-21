@@ -21,6 +21,9 @@ var PixelImage = (function () {
                 return this.layers[this.currentLayer];
             }).bind(this)
         });
+
+        this.width = this.layers.main.width;
+        this.height = this.layers.main.height;
     }
 
     _createClass(PixelImage, [{
@@ -34,6 +37,36 @@ var PixelImage = (function () {
             if (this.validLayerName(name)) {
                 this.layers[name] = new PixelLayer();
             }
+        }
+    }, {
+        key: "getLayer",
+        value: function getLayer() {
+            var name = arguments.length <= 0 || arguments[0] === undefined ? "current" : arguments[0];
+
+            return this.layers[name];
+        }
+    }, {
+        key: "getLayers",
+        value: function getLayers() {
+            var layerNames = [];
+            for (var key in this.layers) {
+                if (this.layers.hasOwnProperty(key) && key !== "current") {
+                    layerNames.push(key);
+                }
+            }
+            return layerNames;
+        }
+    }, {
+        key: "flatten",
+        value: function flatten() {
+            var layers = this.getLayers();
+            var base = this.layers[layers[0]];
+
+            for (var i = 1; i < layers.length; i++) {
+                // Merge the current layer with base
+            }
+
+            return base;
         }
     }]);
 

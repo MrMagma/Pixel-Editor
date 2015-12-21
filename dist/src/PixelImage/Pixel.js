@@ -4,39 +4,29 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var Color = require("./Color.js");
+
 var Pixel = (function () {
     function Pixel() {
         _classCallCheck(this, Pixel);
 
-        this.hue = 0;
-        this.saturation = 0;
-        this.brightness = 0;
-        this.alpha = 1.0;
+        this.color = 0x000000;
+        this.alpha = 0.0;
     }
 
     _createClass(Pixel, [{
-        key: "red",
-        get: function get() {
-            // TODO (Joshua): Implement
-        },
-        set: function set(v) {
-            // TODO (Joshua): Implement       
+        key: "setColor",
+        value: function setColor() {
+            var color = arguments.length <= 0 || arguments[0] === undefined ? this.color : arguments[0];
+
+            this.color = color;
         }
     }, {
-        key: "green",
-        get: function get() {
-            // TODO (Joshua): Implement
-        },
-        set: function set(v) {
-            // TODO (Joshua): Implement
-        }
-    }, {
-        key: "blue",
-        get: function get() {
-            // TODO (Joshua): Implement
-        },
-        set: function set(v) {
-            // TODO (Joshua): Implement
+        key: "setAlpha",
+        value: function setAlpha() {
+            var alpha = arguments.length <= 0 || arguments[0] === undefined ? this.alpha : arguments[0];
+
+            this.alpha = alpha;
         }
     }]);
 

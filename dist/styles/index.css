@@ -4,4 +4,8 @@
   left: 0;
   bottom: 0;
   right: 0;
+  margin: 2em;
+}
+#main-container > canvas {
+  margin: 1em;
 }

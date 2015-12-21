@@ -10,6 +10,17 @@ class PixelLayer {
                 this.pixelMap[x].push(new Pixel());
             }
         }
+        
+        this.width = width;
+        this.height = height;
+    }
+    setPixel(cfg = {}) {
+        let {x, y, color} = cfg;
+        if (x >= 0 && x < this.pixelMap.length) {
+            if (y >= 0 && y < this.pixelMap[x].length) {
+                this.pixelMap[x][y].setColor(color);
+            }
+        }
     }
 }
 

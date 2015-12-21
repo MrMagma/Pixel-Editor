@@ -1,27 +1,15 @@
+var Color = require("./Color.js");
+
 class Pixel {
     constructor() {
-        this.hue = 0;
-        this.saturation = 0;
-        this.brightness = 0;
-        this.alpha = 1.0;
+        this.color = 0x000000;
+        this.alpha = 0.0
     }
-    get red() {
-        // TODO (Joshua): Implement
+    setColor(color = this.color) {
+        this.color = color;
     }
-    set red(v) {
-        // TODO (Joshua): Implement        
-    }
-    get green() {
-        // TODO (Joshua): Implement
-    }
-    set green(v) {
-        // TODO (Joshua): Implement
-    }
-    get blue() {
-        // TODO (Joshua): Implement
-    }
-    set blue(v) {
-        // TODO (Joshua): Implement
+    setAlpha(alpha = this.alpha) {
+        this.alpha = alpha;
     }
 }
 
