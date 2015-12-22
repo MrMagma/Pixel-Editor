@@ -7,84 +7,67 @@ var CanvasStore = require("../Stores/CanvasStore.js");
 var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
 var constants = require("../Constants.js");
 
+var PixelLayer = require("./Layer.jsx");
+
 var mainContainer = document.getElementById("main-container");
-
-function getClientOffset(element) {
-    var xPosition = 0;
-    var yPosition = 0;
-
-    while (element) {
-        xPosition += element.offsetLeft - element.scrollLeft + element.clientLeft;
-        yPosition += element.offsetTop - element.scrollTop + element.clientTop;
-        element = element.offsetParent;
-    }
-    return { x: xPosition, y: yPosition };
-}
-
-function getState() {
-    return {
-        pixels: CanvasStore.getFlattened(),
-        width: CanvasStore.getWidth(),
-        height: CanvasStore.getHeight()
-    };
-}
 
 var PixelCanvas = React.createClass({
     displayName: "PixelCanvas",
-    getInitialState: function getInitialState() {
-        return getState();
+    getDefaultProps: function getDefaultProps() {
+        return {
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%"
+        };
+    },
+    componentWillMount: function componentWillMount() {
+        window.addEventListener("resize", this.handleResize);
     },
     componentDidMount: function componentDidMount() {
-        CanvasStore.onPixelChange(this._onChange);
-        this.update();
+        this.node = ReactDOM.findDOMNode(this);
+        this.updateDimensions();
     },
     componentWillUnmount: function componentWillUnmount() {
-        CanvasStore.offPixelChange(this._onChange);
-    },
-    componentDidUpdate: function componentDidUpdate() {
-        this.update();
-    },
-    handleClick: function handleClick(evt) {
-        var coords = {
-            x: evt.clientX - this.clientOffset.x,
-            y: evt.clientY - this.clientOffset.y
-        };
-
-        CanvasDispatcher.dispatch({
-            action: constants.setPixel,
-            x: Math.floor(coords.x / this.state.width),
-            y: Math.floor(coords.y / this.state.height),
-            color: 0x000000
-        });
+        window.removeEventListener("resize", this.handleResize);
     },
     render: function render() {
-        return React.createElement("canvas", { style: {
-                width: this.props.width,
-                height: this.props.height
-            }, onClick: this.handleClick });
+        var _this = this;
+
+        this.numLayers = 0;
+        var layers = CanvasStore.getLayers();
+        return React.createElement(
+            "div",
+            { style: {
+                    position: "absolute",
+                    top: this.props.y,
+                    left: this.props.x,
+                    width: this.props.width,
+                    height: this.props.height
+                } },
+            layers.map(function (layer, index) {
+                var ret = React.createElement(PixelLayer, { key: index, ref: "layer-" + index, layerName: layer });
+                _this.numLayers++;
+                return ret;
+            }),
+            React.createElement(PixelLayer, { layerName: "current", ref: "layer-" + this.numLayers++ })
+        );
     },
-    update: function update() {
-        this.node = ReactDOM.findDOMNode(this);
-        this.clientOffset = getClientOffset(this.node);
-        this.updateCanvas();
+    handleResize: function handleResize() {
+        if (!this.resizeTimeout) {
+            setTimeout(this.updateDimensions, 500);
+        }
     },
-    paint: function paint(ctx) {
-        ctx.save();
-        ctx.translate(100, 100);
-        ctx.rotate(this.props.rotation, 100, 100);
-        ctx.fillStyle = '#F00';
-        ctx.fillRect(-50, -50, 100, 100);
-        ctx.restore();
-    },
-    updateCanvas: function updateCanvas() {
-        var context = this.node.getContext("2d");
-        this.paint(context);
-    },
-    _onChange: function _onChange() {
-        this.setState(getState());
+    updateDimensions: function updateDimensions() {
+        this.dim = {
+            width: this.node.scrollWidth,
+            height: this.node.scrollHeight
+        };
+
+        for (var i = 0; i < this.numLayers; ++i) {
+            this.refs["layer-" + i].updateDimensions({ parent: this });
+        }
     }
 });
 
-var pCanvas = React.createElement(PixelCanvas, { width: "400px", height: "400px" });
-
-ReactDOM.render(pCanvas, mainContainer);
+ReactDOM.render(React.createElement(PixelCanvas, null), mainContainer);

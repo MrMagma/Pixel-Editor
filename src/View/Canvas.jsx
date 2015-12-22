@@ -5,86 +5,65 @@ var CanvasStore = require("../Stores/CanvasStore.js");
 var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
 var constants = require("../Constants.js");
 
+var PixelLayer = require("./Layer.jsx");
+
 var mainContainer = document.getElementById("main-container");
 
-function getClientOffset(element) {
-    var xPosition = 0;
-    var yPosition = 0;
-      
-    while (element) {
-        xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
-        yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
-        element = element.offsetParent;
-    }
-    return { x: xPosition, y: yPosition };
-}
-
-function getState() {
-    return {
-        pixels: CanvasStore.getFlattened(),
-        width: CanvasStore.getWidth(),
-        height: CanvasStore.getHeight()
-    }
-}
-
 var PixelCanvas = React.createClass({
-    getInitialState() {
-        return getState();
+    getDefaultProps() {
+        return {
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%"
+        };
+    },
+    componentWillMount() {
+        window.addEventListener("resize", this.handleResize);
     },
     componentDidMount() {
-        CanvasStore.onPixelChange(this._onChange);
-        this.update();
+        this.node = ReactDOM.findDOMNode(this);
+        this.updateDimensions();
     },
     componentWillUnmount() {
-        CanvasStore.offPixelChange(this._onChange);
-    },
-    componentDidUpdate() {
-        this.update();
-    },
-    handleClick(evt) {
-        var coords = {
-            x: evt.clientX - this.clientOffset.x,
-            y: evt.clientY - this.clientOffset.y
-        };
-
-        CanvasDispatcher.dispatch({
-            action: constants.setPixel,
-            x: Math.floor(coords.x / this.state.width),
-            y: Math.floor(coords.y / this.state.height),
-            color: 0x000000
-        });
+        window.removeEventListener("resize", this.handleResize);
     },
     render() {
-        return <canvas style={{
+        this.numLayers = 0;
+        let layers = CanvasStore.getLayers();
+        return <div style={{
+            position: "absolute",
+            top: this.props.y,
+            left: this.props.x,
             width: this.props.width,
             height: this.props.height
-        }} onClick={this.handleClick}/>;
+        }}>
+            {layers.map((layer, index) => {
+                let ret = <PixelLayer key={index} ref={`layer-${index}`} layerName={layer}/>;
+                this.numLayers++;
+                return ret;
+            })}
+            <PixelLayer layerName="current" ref={`layer-${this.numLayers++}`}/>
+        </div>
     },
-    update() {
-        this.node = ReactDOM.findDOMNode(this);
-        this.clientOffset = getClientOffset(this.node);
-        this.updateCanvas();
+    handleResize() {
+        if (!this.resizeTimeout) {
+            setTimeout(this.updateDimensions, 500);
+        }
     },
-    paint(ctx) {
-        ctx.save();
-        ctx.translate(100, 100);
-        ctx.rotate(this.props.rotation, 100, 100);
-        ctx.fillStyle = '#F00';
-        ctx.fillRect(-50, -50, 100, 100);
-        ctx.restore();
-    },
-    updateCanvas() {
-        var context = this.node.getContext("2d");
-        this.paint(context);
-    },
-    _onChange() {
-        this.setState(getState());
+    updateDimensions() {
+        this.dim = {
+            width: this.node.scrollWidth,
+            height: this.node.scrollHeight
+        };
+        
+        for (let i = 0; i < this.numLayers; ++i) {
+            this.refs[`layer-${i}`].updateDimensions({parent: this});
+        }
     }
 });
 
-var pCanvas = <PixelCanvas width="400px" height="400px"/>;
-
 ReactDOM.render(
-    pCanvas,
+    <PixelCanvas/>,
     mainContainer
-);
+)

@@ -5,7 +5,7 @@ var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
 var EventEmitter = require('events').EventEmitter;
 var PixelImage = require("../PixelImage/PixelImage.js");
 
-const PIXEL_CHANGE = "pixelChange";
+const LAYER_CHANGE_PREFIX = "layerPaint";
 
 var pixelImage = new PixelImage();
 
@@ -13,30 +13,24 @@ var CanvasStore = {
     getLayers() {
         return pixelImage.getLayers();
     },
-    getLayer(name = "current") {
-        return pixelImage.getLayer(name);
-    },
-    getFlattened() {
-        return pixelImage.flatten();
-    },
     getWidth() {
         return pixelImage.width;
     },
     getHeight() {
         return pixelImage.height;
     },
-    setPixel({x, y, color}) {
-        pixelImage.layers.current.setPixel(x, y, color);
-        CanvasStore.emit(PIXEL_CHANGE);
+    setPixel({x, y, color, layer="current"}) {
+        pixelImage.layers[layer].setPixel(x, y, color);
+        CanvasStore.emit(`${LAYER_CHANGE_PREFIX}_${layer}`);
     }
 };
 
 _.extendOwn(CanvasStore, EventEmitter.prototype, {
-    onPixelChange(cb) {
-        this.on(PIXEL_CHANGE, cb);
+    onLayerChange(layer, cb) {
+        this.on(`${LAYER_CHANGE_PREFIX}_${layer}`, cb);
     },
-    offPixelChange(cb) {
-        this.removeListener(PIXEL_CHANGE, cb);
+    offLayerChange(layer, cb) {
+        this.removeListener(`${LAYER_CHANGE_PREFIX}_${layer}`, cb);        
     }
 });
 

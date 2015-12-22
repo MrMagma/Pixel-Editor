@@ -7,21 +7,13 @@ var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
 var EventEmitter = require('events').EventEmitter;
 var PixelImage = require("../PixelImage/PixelImage.js");
 
-var PIXEL_CHANGE = "pixelChange";
+var LAYER_CHANGE_PREFIX = "layerPaint";
 
 var pixelImage = new PixelImage();
 
 var CanvasStore = {
     getLayers: function getLayers() {
         return pixelImage.getLayers();
-    },
-    getLayer: function getLayer() {
-        var name = arguments.length <= 0 || arguments[0] === undefined ? "current" : arguments[0];
-
-        return pixelImage.getLayer(name);
-    },
-    getFlattened: function getFlattened() {
-        return pixelImage.flatten();
     },
     getWidth: function getWidth() {
         return pixelImage.width;
@@ -33,18 +25,20 @@ var CanvasStore = {
         var x = _ref.x;
         var y = _ref.y;
         var color = _ref.color;
+        var _ref$layer = _ref.layer;
+        var layer = _ref$layer === undefined ? "current" : _ref$layer;
 
-        pixelImage.layers.current.setPixel(x, y, color);
-        CanvasStore.emit(PIXEL_CHANGE);
+        pixelImage.layers[layer].setPixel(x, y, color);
+        CanvasStore.emit(LAYER_CHANGE_PREFIX + "_" + layer);
     }
 };
 
 _.extendOwn(CanvasStore, EventEmitter.prototype, {
-    onPixelChange: function onPixelChange(cb) {
-        this.on(PIXEL_CHANGE, cb);
+    onLayerChange: function onLayerChange(layer, cb) {
+        this.on(LAYER_CHANGE_PREFIX + "_" + layer, cb);
     },
-    offPixelChange: function offPixelChange(cb) {
-        this.removeListener(PIXEL_CHANGE, cb);
+    offLayerChange: function offLayerChange(layer, cb) {
+        this.removeListener(LAYER_CHANGE_PREFIX + "_" + layer, cb);
     }
 });
 
