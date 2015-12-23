@@ -7,8 +7,6 @@ var constants = require("../Constants.js");
 
 var PixelLayer = require("./Layer.jsx");
 
-var mainContainer = document.getElementById("main-container");
-
 var PixelCanvas = React.createClass({
     getDefaultProps() {
         return {
@@ -65,7 +63,4 @@ var PixelCanvas = React.createClass({
     }
 });
 
-ReactDOM.render(
-    <PixelCanvas/>,
-    mainContainer
-)
+module.exports = PixelCanvas;

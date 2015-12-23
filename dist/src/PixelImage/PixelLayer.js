@@ -32,8 +32,10 @@ var PixelLayer = (function () {
     _createClass(PixelLayer, [{
         key: "getPixel",
         value: function getPixel(x, y) {
-            if (x < this.pixelMap.length) {
+            if (x < this.pixelMap.length && y < this.pixelMap[x].length) {
                 return this.pixelMap[x][y];
+            } else {
+                throw new RangeError("Coordinates (" + x + ", " + y + ") are out of range");
             }
         }
     }, {

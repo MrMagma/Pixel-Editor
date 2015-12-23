@@ -15,7 +15,7 @@ gulp.task("clean-build", function() {
 
 gulp.task("browserify-js", function() {
     var b = browserify({
-        entries: "./src/index.js",
+        entries: "./src/index.jsx",
         debug: true,
         transform: [babelify]
     });

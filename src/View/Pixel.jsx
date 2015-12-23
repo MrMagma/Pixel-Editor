@@ -1,5 +1,4 @@
 var React = require("react");
-var ReactDOM = require("react-dom");
 
 var CanvasStore = require("../Stores/CanvasStore.js");
 var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
@@ -23,13 +22,13 @@ var Pixel = React.createClass({
         return <div style={{
             display: "inline-block",
             position: "absolute",
-            top: this.props.x * this.state.width,
-            left: this.props.y * this.state.height,
+            top: this.props.canvasX * this.state.width,
+            left: this.props.canvasY * this.state.height,
             width: this.state.width,
             height: this.state.height,
             background: CanvasStore.getPixelRGB({
-                x: this.props.x,
-                y: this.props.y,
+                x: this.props.canvasX,
+                y: this.props.canvasY,
                 layer: this.props.layerName
             })
         }}></div>

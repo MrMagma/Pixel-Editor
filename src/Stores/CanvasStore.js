@@ -19,8 +19,14 @@ var CanvasStore = {
     getHeight() {
         return pixelImage.height;
     },
-    getPixelRGB({x, y, layer="current"}) {
-        return pixelImage.getLayer(layer).getPixel(x, y).getRGB();
+    getPixelRGB(cfg = {}) {
+        let {x, y, layer = "current"} = cfg;
+        if (_.isNumber(x) && !_.isNaN(x) &&
+            _.isNumber(y) && !_.isNaN(y)) {
+            return pixelImage.getLayer(layer).getPixel(x, y).getRGB();
+        } else {
+            throw new TypeError("Coordinates must be numbers and not NaN");
+        }
     },
     setPixel({x, y, color, layer="current"}) {
         pixelImage.layers[layer].setPixel(x, y, color);

@@ -1,7 +1,6 @@
 "use strict";
 
 var React = require("react");
-var ReactDOM = require("react-dom");
 
 var CanvasStore = require("../Stores/CanvasStore.js");
 var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
@@ -29,8 +28,9 @@ var PixelLayer = React.createClass({
         for (var i = 0; i < numPixels; i++) {
             var x = i % w;
             var y = Math.floor(i / w);
-            children.push(React.createElement(Pixel, { x: x, y: y, layerName: this.props.layerName,
-                key: i, ref: "pixel-" + x + "-" + y }));
+            children.push(React.createElement(Pixel, { canvasX: x, canvasY: y,
+                layerName: this.props.layerName, key: i,
+                ref: "pixel-" + x + "-" + y }));
         }
         return React.createElement(
             "div",

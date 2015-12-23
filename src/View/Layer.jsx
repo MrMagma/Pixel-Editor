@@ -1,5 +1,4 @@
 var React = require("react");
-var ReactDOM = require("react-dom");
 
 var CanvasStore = require("../Stores/CanvasStore.js");
 var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
@@ -25,8 +24,9 @@ var PixelLayer = React.createClass({
         for (let i = 0; i < numPixels; i++) {
             let x = i % w;
             let y = Math.floor(i / w);
-            children.push(<Pixel x={x} y={y} layerName={this.props.layerName}
-                key={i} ref={`pixel-${x}-${y}`}/>);
+            children.push(<Pixel canvasX={x} canvasY={y}
+                layerName={this.props.layerName} key={i}
+                ref={`pixel-${x}-${y}`}/>);
         }
         return <div style={{
             position: "absolute",
