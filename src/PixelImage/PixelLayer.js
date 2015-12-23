@@ -14,6 +14,11 @@ class PixelLayer {
         this.width = width;
         this.height = height;
     }
+    getPixel(x, y) {
+        if (x < this.pixelMap.length) {
+            return this.pixelMap[x][y];
+        }
+    }
     setPixel(cfg = {}) {
         let {x, y, color} = cfg;
         if (x >= 0 && x < this.pixelMap.length) {

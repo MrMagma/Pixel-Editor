@@ -55,18 +55,20 @@ var PixelCanvas = React.createClass({
     },
     handleResize: function handleResize() {
         if (!this.resizeTimeout) {
-            setTimeout(this.updateDimensions, 500);
+            this.resizeTimeout = setTimeout(this.updateDimensions, 1000);
         }
     },
     updateDimensions: function updateDimensions() {
         this.dim = {
-            width: this.node.scrollWidth,
-            height: this.node.scrollHeight
+            width: this.node.offsetWidth,
+            height: this.node.offsetHeight
         };
 
         for (var i = 0; i < this.numLayers; ++i) {
             this.refs["layer-" + i].updateDimensions({ parent: this });
         }
+
+        this.resizeTimeout = false;
     }
 });
 

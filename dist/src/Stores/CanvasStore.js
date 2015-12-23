@@ -21,12 +21,20 @@ var CanvasStore = {
     getHeight: function getHeight() {
         return pixelImage.height;
     },
-    setPixel: function setPixel(_ref) {
+    getPixelRGB: function getPixelRGB(_ref) {
         var x = _ref.x;
         var y = _ref.y;
-        var color = _ref.color;
         var _ref$layer = _ref.layer;
         var layer = _ref$layer === undefined ? "current" : _ref$layer;
+
+        return pixelImage.getLayer(layer).getPixel(x, y).getRGB();
+    },
+    setPixel: function setPixel(_ref2) {
+        var x = _ref2.x;
+        var y = _ref2.y;
+        var color = _ref2.color;
+        var _ref2$layer = _ref2.layer;
+        var layer = _ref2$layer === undefined ? "current" : _ref2$layer;
 
         pixelImage.layers[layer].setPixel(x, y, color);
         CanvasStore.emit(LAYER_CHANGE_PREFIX + "_" + layer);

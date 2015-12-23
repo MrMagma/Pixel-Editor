@@ -10,23 +10,21 @@ var Pixel = (function () {
     function Pixel() {
         _classCallCheck(this, Pixel);
 
-        this.color = 0x000000;
+        this.red = 0;
+        this.green = 0;
+        this.blue = 0;
         this.alpha = 0.0;
     }
 
     _createClass(Pixel, [{
-        key: "setColor",
-        value: function setColor() {
-            var color = arguments.length <= 0 || arguments[0] === undefined ? this.color : arguments[0];
-
-            this.color = color;
+        key: "getRGB",
+        value: function getRGB() {
+            return this.rgb;
         }
     }, {
-        key: "setAlpha",
-        value: function setAlpha() {
-            var alpha = arguments.length <= 0 || arguments[0] === undefined ? this.alpha : arguments[0];
-
-            this.alpha = alpha;
+        key: "rgb",
+        get: function get() {
+            return "rgba(" + this.red + ", " + this.green + ", " + this.blue + ", " + this.alpha + ")";
         }
     }]);
 

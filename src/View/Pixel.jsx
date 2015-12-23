@@ -9,8 +9,7 @@ var Pixel = React.createClass({
     getInitialState() {
         return {
             width: 1,
-            height: 1,
-            color: "rgba(0, 0, 0, 1)"
+            height: 1
         }
     },
     setDimensions(dim = {}) {
@@ -28,8 +27,15 @@ var Pixel = React.createClass({
             left: this.props.y * this.state.height,
             width: this.state.width,
             height: this.state.height,
-            background: this.state.color
+            background: CanvasStore.getPixelRGB({
+                x: this.props.x,
+                y: this.props.y,
+                layer: this.props.layerName
+            })
         }}></div>
+    },
+    handleClick() {
+        
     }
 });
 

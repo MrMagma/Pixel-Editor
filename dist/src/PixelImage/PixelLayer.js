@@ -30,6 +30,13 @@ var PixelLayer = (function () {
     }
 
     _createClass(PixelLayer, [{
+        key: "getPixel",
+        value: function getPixel(x, y) {
+            if (x < this.pixelMap.length) {
+                return this.pixelMap[x][y];
+            }
+        }
+    }, {
         key: "setPixel",
         value: function setPixel() {
             var cfg = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];

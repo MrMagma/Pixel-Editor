@@ -19,6 +19,9 @@ var CanvasStore = {
     getHeight() {
         return pixelImage.height;
     },
+    getPixelRGB({x, y, layer="current"}) {
+        return pixelImage.getLayer(layer).getPixel(x, y).getRGB();
+    },
     setPixel({x, y, color, layer="current"}) {
         pixelImage.layers[layer].setPixel(x, y, color);
         CanvasStore.emit(`${LAYER_CHANGE_PREFIX}_${layer}`);

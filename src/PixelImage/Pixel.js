@@ -2,14 +2,16 @@ var Color = require("./Color.js");
 
 class Pixel {
     constructor() {
-        this.color = 0x000000;
-        this.alpha = 0.0
+        this.red = 0;
+        this.green = 0;
+        this.blue = 0;
+        this.alpha = 0.0;
     }
-    setColor(color = this.color) {
-        this.color = color;
+    get rgb() {
+        return `rgba(${this.red}, ${this.green}, ${this.blue}, ${this.alpha})`;
     }
-    setAlpha(alpha = this.alpha) {
-        this.alpha = alpha;
+    getRGB() {
+        return this.rgb;
     }
 }
 
