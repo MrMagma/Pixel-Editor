@@ -1,5 +1,3 @@
-var Color = require("./Color.js");
-
 class Pixel {
     constructor() {
         this.red = 0;
