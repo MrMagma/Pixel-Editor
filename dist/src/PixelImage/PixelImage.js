@@ -4,73 +4,77 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var PixelLayer = require("./PixelLayer.js");
-var _ = require("underscore");
-
 var PixelImage = (function () {
-    function PixelImage() {
-        _classCallCheck(this, PixelImage);
 
-        this.currentLayer = "main";
-        this.layers = {
-            main: new PixelLayer()
-        };
+    var PixelLayer = require("./PixelLayer.js");
+    var _ = require("underscore");
 
-        Object.defineProperty(this.layers, "current", {
-            get: (function () {
-                return this.layers[this.currentLayer];
-            }).bind(this)
-        });
+    var PixelImage = (function () {
+        function PixelImage() {
+            _classCallCheck(this, PixelImage);
 
-        this.width = this.layers.main.width;
-        this.height = this.layers.main.height;
-    }
+            this.currentLayer = "main";
+            this.layers = {
+                main: new PixelLayer()
+            };
 
-    _createClass(PixelImage, [{
-        key: "validLayerName",
-        value: function validLayerName(name) {
-            return _.isString(name) && name !== "current";
+            Object.defineProperty(this.layers, "current", {
+                get: (function () {
+                    return this.layers[this.currentLayer];
+                }).bind(this)
+            });
+
+            this.width = this.layers.main.width;
+            this.height = this.layers.main.height;
         }
-    }, {
-        key: "addLayer",
-        value: function addLayer(name) {
-            if (this.validLayerName(name)) {
-                this.layers[name] = new PixelLayer();
+
+        _createClass(PixelImage, [{
+            key: "validLayerName",
+            value: function validLayerName(name) {
+                return _.isString(name) && name !== "current";
             }
-        }
-    }, {
-        key: "getLayer",
-        value: function getLayer() {
-            var name = arguments.length <= 0 || arguments[0] === undefined ? "current" : arguments[0];
-
-            return this.layers[name];
-        }
-    }, {
-        key: "getLayers",
-        value: function getLayers() {
-            var layerNames = [];
-            for (var key in this.layers) {
-                if (this.layers.hasOwnProperty(key) && key !== "current") {
-                    layerNames.push(key);
+        }, {
+            key: "addLayer",
+            value: function addLayer(name) {
+                if (this.validLayerName(name)) {
+                    this.layers[name] = new PixelLayer();
                 }
             }
-            return layerNames;
-        }
-    }, {
-        key: "flatten",
-        value: function flatten() {
-            var layers = this.getLayers();
-            var base = this.layers[layers[0]];
+        }, {
+            key: "getLayer",
+            value: function getLayer() {
+                var name = arguments.length <= 0 || arguments[0] === undefined ? "current" : arguments[0];
 
-            for (var i = 1; i < layers.length; i++) {
-                // Merge the current layer with base
+                return this.layers[name];
             }
+        }, {
+            key: "getLayers",
+            value: function getLayers() {
+                var layerNames = [];
+                for (var key in this.layers) {
+                    if (this.layers.hasOwnProperty(key) && key !== "current") {
+                        layerNames.push(key);
+                    }
+                }
+                return layerNames;
+            }
+        }, {
+            key: "flatten",
+            value: function flatten() {
+                var layers = this.getLayers();
+                var base = this.layers[layers[0]];
 
-            return base;
-        }
-    }]);
+                for (var i = 1; i < layers.length; i++) {
+                    // Merge the current layer with base
+                }
 
+                return base;
+            }
+        }]);
+
+        return PixelImage;
+    })();
+
+    module.exports = PixelImage;
     return PixelImage;
 })();
-
-module.exports = PixelImage;

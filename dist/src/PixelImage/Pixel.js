@@ -5,28 +5,31 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Pixel = (function () {
-    function Pixel() {
-        _classCallCheck(this, Pixel);
+    var Pixel = (function () {
+        function Pixel() {
+            _classCallCheck(this, Pixel);
 
-        this.red = 0;
-        this.green = 0;
-        this.blue = 0;
-        this.alpha = 0.0;
-    }
-
-    _createClass(Pixel, [{
-        key: "getRGB",
-        value: function getRGB() {
-            return this.rgb;
+            this.red = 0;
+            this.green = 0;
+            this.blue = 0;
+            this.alpha = 0.0;
         }
-    }, {
-        key: "rgb",
-        get: function get() {
-            return "rgba(" + this.red + ", " + this.green + ", " + this.blue + ", " + this.alpha + ")";
-        }
-    }]);
 
+        _createClass(Pixel, [{
+            key: "getRGB",
+            value: function getRGB() {
+                return this.rgb;
+            }
+        }, {
+            key: "rgb",
+            get: function get() {
+                return "rgba(" + this.red + ", " + this.green + ", " + this.blue + ", " + this.alpha + ")";
+            }
+        }]);
+
+        return Pixel;
+    })();
+
+    module.exports = Pixel;
     return Pixel;
 })();
-
-module.exports = Pixel;
