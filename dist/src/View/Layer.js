@@ -71,7 +71,6 @@ var PixelLayer = (function () {
         }
     });
 
+    module.exports = PixelLayer;
     return PixelLayer;
 })();
-
-module.exports = PixelLayer;

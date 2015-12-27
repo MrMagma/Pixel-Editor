@@ -14,9 +14,6 @@ var Pixel = (function() {
                 color: "rgba(0, 0, 0, 0)"
             }
         },
-        trueLayerName() {
-            return CanvasStore.getTrueLayerName(this.props.layerName);
-        },
         componentDidMount() {
             // Add a listener on the store for changes on the pixel that this
             // component represents
@@ -24,7 +21,7 @@ var Pixel = (function() {
                 layerName: this.trueLayerName(),
                 x: this.props.canvasX,
                 y: this.props.canvasY,
-                callback: this._onChange
+                callback: this.handleChange
             });
         },
         componentWillUnmount() {
@@ -34,16 +31,7 @@ var Pixel = (function() {
                 layerName: this.trueLayerName(),
                 x: this.props.canvasX,
                 y: this.props.canvasY,
-                callback: this._onChange
-            });
-        },
-        setDimensions(dim = {}) {
-            // Set the width and height of this Pixel in screen pixels.
-            // Used when the window/canvas is resized.
-            let {width = this.state.width, height = this.state.height} = dim;
-            this.setState({
-                width: width,
-                height: height
+                callback: this.handleChange
             });
         },
         render() {
@@ -70,7 +58,7 @@ var Pixel = (function() {
                 color: [0, 0, 0, 1.0]
             })
         },
-        _onChange() {
+        handleChange() {
             // This method should be called whenever the pixel that this
             // Component represents is changed, so update our shtuff.
             this.setState({
@@ -81,11 +69,22 @@ var Pixel = (function() {
                     layer: this.trueLayerName()
                 })
             });
+        },
+        trueLayerName() {
+            return CanvasStore.getTrueLayerName(this.props.layerName);
+        },
+        setDimensions(dim = {}) {
+            // Set the width and height of this Pixel in screen pixels.
+            // Used when the window/canvas is resized.
+            let {width = this.state.width, height = this.state.height} = dim;
+            this.setState({
+                width: width,
+                height: height
+            });
         }
     });
-
+    
+    module.exports = Pixel;
     return Pixel;
-
+    
 })();
-
-module.exports = Pixel;

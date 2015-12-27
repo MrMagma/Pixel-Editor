@@ -92,7 +92,6 @@ var PixelCanvas = (function () {
         }
     });
 
+    module.exports = PixelCanvas;
     return PixelCanvas;
 })();
-
-module.exports = PixelCanvas;

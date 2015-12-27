@@ -2,11 +2,11 @@ var PixelCanvas = (function() {
     
     var React = require("react");
     var ReactDOM = require("react-dom");
-
+    
     var CanvasStore = require("../Stores/CanvasStore.js");
     var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
     var constants = require("../Constants.js");
-
+    
     var PixelLayer = require("./Layer.jsx");
 
     /*
@@ -85,8 +85,7 @@ var PixelCanvas = (function() {
         }
     });
     
+    module.exports = PixelCanvas;
     return PixelCanvas;
     
 })();
-
-module.exports = PixelCanvas;

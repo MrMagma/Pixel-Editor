@@ -1,13 +1,13 @@
 var PixelLayer = (function() {
     
     var React = require("react");
-
+    
     var CanvasStore = require("../Stores/CanvasStore.js");
     var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
     var constants = require("../Constants.js");
-
+    
     var Pixel = require("./Pixel.jsx");
-
+    
     // Gets the up to date state of the current PixelLayer component
     function getState() {
         return {
@@ -15,7 +15,7 @@ var PixelLayer = (function() {
             canvasHeight: CanvasStore.getHeight()
         };
     }
-
+    
     var PixelLayer = React.createClass({
         getInitialState() {
             return getState();
@@ -59,8 +59,8 @@ var PixelLayer = (function() {
             }
         }
     });
-
+    
+    module.exports = PixelLayer;
     return PixelLayer;
+    
 })();
-
-module.exports = PixelLayer;

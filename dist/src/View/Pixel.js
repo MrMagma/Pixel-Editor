@@ -17,9 +17,6 @@ var Pixel = (function () {
                 color: "rgba(0, 0, 0, 0)"
             };
         },
-        trueLayerName: function trueLayerName() {
-            return CanvasStore.getTrueLayerName(this.props.layerName);
-        },
         componentDidMount: function componentDidMount() {
             // Add a listener on the store for changes on the pixel that this
             // component represents
@@ -27,7 +24,7 @@ var Pixel = (function () {
                 layerName: this.trueLayerName(),
                 x: this.props.canvasX,
                 y: this.props.canvasY,
-                callback: this._onChange
+                callback: this.handleChange
             });
         },
         componentWillUnmount: function componentWillUnmount() {
@@ -37,22 +34,7 @@ var Pixel = (function () {
                 layerName: this.trueLayerName(),
                 x: this.props.canvasX,
                 y: this.props.canvasY,
-                callback: this._onChange
-            });
-        },
-        setDimensions: function setDimensions() {
-            var dim = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-            // Set the width and height of this Pixel in screen pixels.
-            // Used when the window/canvas is resized.
-            var _dim$width = dim.width;
-            var width = _dim$width === undefined ? this.state.width : _dim$width;
-            var _dim$height = dim.height;
-            var height = _dim$height === undefined ? this.state.height : _dim$height;
-
-            this.setState({
-                width: width,
-                height: height
+                callback: this.handleChange
             });
         },
         render: function render() {
@@ -79,7 +61,7 @@ var Pixel = (function () {
                 color: [0, 0, 0, 1.0]
             });
         },
-        _onChange: function _onChange() {
+        handleChange: function handleChange() {
             // This method should be called whenever the pixel that this
             // Component represents is changed, so update our shtuff.
             this.setState({
@@ -90,10 +72,27 @@ var Pixel = (function () {
                     layer: this.trueLayerName()
                 })
             });
+        },
+        trueLayerName: function trueLayerName() {
+            return CanvasStore.getTrueLayerName(this.props.layerName);
+        },
+        setDimensions: function setDimensions() {
+            var dim = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+            // Set the width and height of this Pixel in screen pixels.
+            // Used when the window/canvas is resized.
+            var _dim$width = dim.width;
+            var width = _dim$width === undefined ? this.state.width : _dim$width;
+            var _dim$height = dim.height;
+            var height = _dim$height === undefined ? this.state.height : _dim$height;
+
+            this.setState({
+                width: width,
+                height: height
+            });
         }
     });
 
+    module.exports = Pixel;
     return Pixel;
 })();
-
-module.exports = Pixel;
