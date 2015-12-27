@@ -15,7 +15,9 @@ var PixelImage = (function () {
 
             this.currentLayer = "main";
             this.layers = {
-                main: new PixelLayer()
+                main: new PixelLayer({
+                    name: "main"
+                })
             };
 
             Object.defineProperty(this.layers, "current", {
@@ -37,7 +39,9 @@ var PixelImage = (function () {
             key: "addLayer",
             value: function addLayer(name) {
                 if (this.validLayerName(name)) {
-                    this.layers[name] = new PixelLayer();
+                    this.layers[name] = new PixelLayer({
+                        name: name
+                    });
                 }
             }
         }, {
@@ -57,18 +61,6 @@ var PixelImage = (function () {
                     }
                 }
                 return layerNames;
-            }
-        }, {
-            key: "flatten",
-            value: function flatten() {
-                var layers = this.getLayers();
-                var base = this.layers[layers[0]];
-
-                for (var i = 1; i < layers.length; i++) {
-                    // Merge the current layer with base
-                }
-
-                return base;
             }
         }]);
 

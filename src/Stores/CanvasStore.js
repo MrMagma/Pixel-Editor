@@ -15,6 +15,9 @@ var CanvasStore = (function() {
         getLayers() {
             return pixelImage.getLayers();
         },
+        getTrueLayerName(layerName) {
+            return pixelImage.getLayer(layerName).layerName;
+        },
         getWidth() {
             return pixelImage.width;
         },
@@ -30,30 +33,43 @@ var CanvasStore = (function() {
                 throw new TypeError("Coordinates must be numbers and not NaN");
             }
         },
-        setPixel({x, y, color, layer="current"}) {
-            pixelImage.layers[layer].setPixel(x, y, color);
-            CanvasStore.emit(`${LAYER_CHANGE_PREFIX}_${layer}`);
+        setPixel(action) {
+            let {layerName, x, y} = action;
+            let layer = pixelImage.getLayer(layerName);
+            layer.setPixelRGB(action);
+            this.emitPixelChange({
+                x: x,
+                y: y,
+                layerName: layer.layerName
+            });
+        },
+        emitPixelChange({x, y, layerName}) {
+            this.emit(`${LAYER_CHANGE_PREFIX}_${layerName}_${x}-${y}`);
         }
     };
 
     _.extendOwn(CanvasStore, EventEmitter.prototype, {
-        onLayerChange(layer, cb) {
-            this.on(`${LAYER_CHANGE_PREFIX}_${layer}`, cb);
+        // Maybe make things just able to listen for changes in a layer, and
+        // then leave it up to the listener to determine if the event was
+        // relevant to them
+        onPixelChange({layerName, x, y, callback}) {
+            this.on(`${LAYER_CHANGE_PREFIX}_${layerName}_${x}-${y}`, callback);           
         },
-        offLayerChange(layer, cb) {
-            this.removeListener(`${LAYER_CHANGE_PREFIX}_${layer}`, cb);        
+        offPixelChange({layerName, x, y, callback}) {
+            this.removeListener(`${LAYER_CHANGE_PREFIX}_${layerName}_${x}-${y}`,
+                    callback);
         }
     });
 
     CanvasDispatcher.register(function(action) {
-        switch (action.type) {
+        switch (action.actionType) {
             case constants.SET_PIXEL:
                 CanvasStore.setPixel(action);
                 break;
         }
     });
-
+    
     module.exports = CanvasStore;
     return CanvasStore;
-
+    
 })();

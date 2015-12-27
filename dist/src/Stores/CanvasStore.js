@@ -17,6 +17,9 @@ var CanvasStore = (function () {
         getLayers: function getLayers() {
             return pixelImage.getLayers();
         },
+        getTrueLayerName: function getTrueLayerName(layerName) {
+            return pixelImage.getLayer(layerName).layerName;
+        },
         getWidth: function getWidth() {
             return pixelImage.width;
         },
@@ -36,29 +39,53 @@ var CanvasStore = (function () {
                 throw new TypeError("Coordinates must be numbers and not NaN");
             }
         },
-        setPixel: function setPixel(_ref) {
+        setPixel: function setPixel(action) {
+            var layerName = action.layerName;
+            var x = action.x;
+            var y = action.y;
+
+            var layer = pixelImage.getLayer(layerName);
+            layer.setPixelRGB(action);
+            this.emitPixelChange({
+                x: x,
+                y: y,
+                layerName: layer.layerName
+            });
+        },
+        emitPixelChange: function emitPixelChange(_ref) {
             var x = _ref.x;
             var y = _ref.y;
-            var color = _ref.color;
-            var _ref$layer = _ref.layer;
-            var layer = _ref$layer === undefined ? "current" : _ref$layer;
+            var layerName = _ref.layerName;
 
-            pixelImage.layers[layer].setPixel(x, y, color);
-            CanvasStore.emit(LAYER_CHANGE_PREFIX + "_" + layer);
+            this.emit(LAYER_CHANGE_PREFIX + "_" + layerName + "_" + x + "-" + y);
         }
     };
 
     _.extendOwn(CanvasStore, EventEmitter.prototype, {
-        onLayerChange: function onLayerChange(layer, cb) {
-            this.on(LAYER_CHANGE_PREFIX + "_" + layer, cb);
+        // Maybe make things just able to listen for changes in a layer, and
+        // then leave it up to the listener to determine if the event was
+        // relevant to them
+
+        onPixelChange: function onPixelChange(_ref2) {
+            var layerName = _ref2.layerName;
+            var x = _ref2.x;
+            var y = _ref2.y;
+            var callback = _ref2.callback;
+
+            this.on(LAYER_CHANGE_PREFIX + "_" + layerName + "_" + x + "-" + y, callback);
         },
-        offLayerChange: function offLayerChange(layer, cb) {
-            this.removeListener(LAYER_CHANGE_PREFIX + "_" + layer, cb);
+        offPixelChange: function offPixelChange(_ref3) {
+            var layerName = _ref3.layerName;
+            var x = _ref3.x;
+            var y = _ref3.y;
+            var callback = _ref3.callback;
+
+            this.removeListener(LAYER_CHANGE_PREFIX + "_" + layerName + "_" + x + "-" + y, callback);
         }
     });
 
     CanvasDispatcher.register(function (action) {
-        switch (action.type) {
+        switch (action.actionType) {
             case constants.SET_PIXEL:
                 CanvasStore.setPixel(action);
                 break;

@@ -13,9 +13,15 @@ var Pixel = (function() {
         getRGB() {
             return this.rgb;
         }
+        setRGB([r, g, b, a = 1.0]) {
+            this.red = r;
+            this.green = g;
+            this.blue = b;
+            this.alpha = a;
+        }
     }
-
-module.exports = Pixel;
+    
+    module.exports = Pixel;
     return Pixel;
     
 })();
