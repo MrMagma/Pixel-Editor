@@ -24,6 +24,11 @@ var PixelCanvas = (function() {
                 height: "100%"
             };
         },
+        getInitialState() {
+            return {
+                pxSize: 1
+            };
+        },
         componentWillMount() {
             // Listen for resize events
             window.addEventListener("resize", this.handleResize);
@@ -54,31 +59,28 @@ var PixelCanvas = (function() {
                 height: this.props.height
             }}>
                 {layers.map((layer, index) => {
-                    let ret = <PixelLayer key={index} ref={`layer-${index}`} layerName={layer}/>;
+                    let ret = <PixelLayer key={index} ref={`layer-${index}`}
+                        layerName={layer} pxSize={this.state.pxSize}/>;
                     this.numLayers++;
                     return ret;
                 })}
-                <PixelLayer layerName="current" ref={`layer-${this.numLayers++}`}/>
+                <PixelLayer layerName="current"
+                    ref={`layer-${this.numLayers++}`}
+                    pxSize={this.state.pxSize}/>
             </div>
         },
         handleResize() {
-            // If we haven't already set a timeout to handle the resize event, then
-            // set it to 1 second
+            // If we haven't already set a timeout to handle the resize event,
+            // then set it to 1 second
             if (!this.resizeTimeout) {
                 this.resizeTimeout = setTimeout(this.updateDimensions, 1000);
             }
         },
         updateDimensions() {
-            // Update our stored dimensions.
-            this.dim = {
-                width: this.node.offsetWidth,
-                height: this.node.offsetHeight
-            };
-            
-            // Update the dimensions of our child elements
-            for (let i = 0; i < this.numLayers; ++i) {
-                this.refs[`layer-${i}`].updateDimensions({parent: this});
-            }
+            // Update our stored size.
+            this.setState({
+                pxSize: Math.min(this.node.offsetWidth, this.node.offsetHeight)
+            });
             
             // Clear the resize timeout
             this.resizeTimeout = false;

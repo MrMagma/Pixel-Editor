@@ -9,16 +9,18 @@ var Pixel = (function() {
     var Pixel = React.createClass({
         getInitialState() {
             return {
-                width: 1,
-                height: 1,
-                color: "rgba(0, 0, 0, 0)"
-            }
+                color: CanvasStore.getPixelRGB({
+                    x: this.props.canvasX,
+                    y: this.props.canvasY,
+                    layer: this.props.layerName
+                })
+            };
         },
         componentDidMount() {
             // Add a listener on the store for changes on the pixel that this
             // component represents
             CanvasStore.onPixelChange({
-                layerName: this.trueLayerName(),
+                layerName: this.props.layerName,
                 x: this.props.canvasX,
                 y: this.props.canvasY,
                 callback: this.handleChange
@@ -28,7 +30,7 @@ var Pixel = (function() {
             // Unbind all of the listeners this component has created and do
             // general clean up
             CanvasStore.offPixelChange({
-                layerName: this.trueLayerName(),
+                layerName: this.props.layerName,
                 x: this.props.canvasX,
                 y: this.props.canvasY,
                 callback: this.handleChange
@@ -38,11 +40,15 @@ var Pixel = (function() {
             return <div style={{
                 display: "inline-block",
                 position: "absolute",
-                top: this.props.canvasX * this.state.width,
-                left: this.props.canvasY * this.state.height,
-                width: this.state.width,
-                height: this.state.height,
-                background: this.state.color
+                top: this.props.canvasX * this.props.pxSize,
+                left: this.props.canvasY * this.props.pxSize,
+                width: this.props.pxSize,
+                height: this.props.pxSize,
+                background: CanvasStore.getPixelRGB({
+                    x: this.props.canvasX,
+                    y: this.props.canvasY,
+                    layer: this.props.layerName
+                })
             }} onClick={this.handleClick}></div>
         },
         handleClick() {
@@ -52,34 +58,21 @@ var Pixel = (function() {
                 actionType: constants.SET_PIXEL,
                 x: this.props.canvasX,
                 y: this.props.canvasY,
-                layerName: this.trueLayerName(),
+                layerName: this.props.layerName,
                 // TODO (Joshua): Use the active brush color (from the store)
                 // here
                 color: [0, 0, 0, 1.0]
-            })
+            });
         },
         handleChange() {
             // This method should be called whenever the pixel that this
             // Component represents is changed, so update our shtuff.
             this.setState({
                 color: CanvasStore.getPixelRGB({
-                    actionType: constants.SET_PIXEL,
                     x: this.props.canvasX,
                     y: this.props.canvasY,
-                    layer: this.trueLayerName()
+                    layer: this.props.layerName
                 })
-            });
-        },
-        trueLayerName() {
-            return CanvasStore.getTrueLayerName(this.props.layerName);
-        },
-        setDimensions(dim = {}) {
-            // Set the width and height of this Pixel in screen pixels.
-            // Used when the window/canvas is resized.
-            let {width = this.state.width, height = this.state.height} = dim;
-            this.setState({
-                width: width,
-                height: height
             });
         }
     });

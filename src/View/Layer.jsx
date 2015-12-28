@@ -20,20 +20,29 @@ var PixelLayer = (function() {
         getInitialState() {
             return getState();
         },
+        componentDidMount() {
+            CanvasStore.onDimensionChange({
+                callback: this.handleChange
+            });
+        },
+        componentWillUnmount() {
+            CanvasStore.offDimensionChange({
+                callback: this.handleChange
+            });
+        },
         render() {
             let children = [];
-            let w = this.state.canvasWidth, h = this.state.canvasHeight,
-                numPixels = w * h;
+            let w = this.state.canvasWidth, h = this.state.canvasHeight;
             
             // Add one Pixel component for every pixel on this layer to the
             // array of children to render
-            for (let i = 0; i < numPixels; i++) {
-                let x = i % w,
-                    y = Math.floor(i / w);
-                
-                children.push(<Pixel canvasX={x} canvasY={y}
-                    layerName={this.props.layerName} key={i}
-                    ref={`pixel-${x}-${y}`}/>);
+            let pxSize = this.props.pxSize / Math.min(w, h);
+            for (let x = 0; x < w; x++) {
+                for (let y = 0; y < h; y++) {
+                    children.push(<Pixel canvasX={x} canvasY={y} pxSize={pxSize}
+                        layerName={this.trueLayerName()} key={x + w * y}
+                        ref={`pixel-${x}-${y}`}/>);
+                }
             }
             
             return <div style={{
@@ -44,19 +53,11 @@ var PixelLayer = (function() {
                 right: 0
             }}>{children}</div>
         },
-        updateDimensions({parent = this}) {
-            this.dim = parent.dim;
-            let size = Math.min(this.dim.width, this.dim.height);
-            
-            // Update the dimensions of all of our child pixels
-            for (let x = 0; x < this.state.canvasWidth; x++) {
-                for (let y = 0; y < this.state.canvasHeight; y++) {
-                    this.refs[`pixel-${x}-${y}`].setDimensions({
-                        width: size / this.state.canvasWidth,
-                        height: size / this.state.canvasHeight
-                    });
-                }
-            }
+        handleChange() {
+            this.setState(getState());
+        },
+        trueLayerName() {
+            return CanvasStore.getTrueLayerName(this.props.layerName);            
         }
     });
     

@@ -1,14 +1,15 @@
 var CanvasStore = (function() {
     
+    var EventEmitter = require('events').EventEmitter;
     var _ = require("underscore");
-
+    
     var constants = require("../Constants.js");
     var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
-    var EventEmitter = require('events').EventEmitter;
     var PixelImage = require("../PixelImage/PixelImage.js");
-
-    const LAYER_CHANGE_PREFIX = "layerPaint";
-
+    
+    const IMAGE_CHANGE_PREFIX = "imageChange";
+    const LAYER_CHANGE_PREFIX = "layerChange";
+    
     var pixelImage = new PixelImage();
 
     var CanvasStore = {
@@ -33,6 +34,9 @@ var CanvasStore = (function() {
                 throw new TypeError("Coordinates must be numbers and not NaN");
             }
         },
+        getDimensions() {
+            return pixelImage.getDimensions();
+        },
         setPixel(action) {
             let {layerName, x, y} = action;
             let layer = pixelImage.getLayer(layerName);
@@ -43,11 +47,12 @@ var CanvasStore = (function() {
                 layerName: layer.layerName
             });
         },
-        emitPixelChange({x, y, layerName}) {
-            this.emit(`${LAYER_CHANGE_PREFIX}_${layerName}_${x}-${y}`);
+        setDimensions(action) {
+            pixelImage.setDimensions(action);
+            this.emitDimensionChange();
         }
     };
-
+    
     _.extendOwn(CanvasStore, EventEmitter.prototype, {
         // Maybe make things just able to listen for changes in a layer, and
         // then leave it up to the listener to determine if the event was
@@ -58,6 +63,19 @@ var CanvasStore = (function() {
         offPixelChange({layerName, x, y, callback}) {
             this.removeListener(`${LAYER_CHANGE_PREFIX}_${layerName}_${x}-${y}`,
                     callback);
+        },
+        onDimensionChange({callback}) {
+            this.on(`${IMAGE_CHANGE_PREFIX}_dimensionChange`, callback);
+        },
+        offDimensionChange({callback}) {
+            this.removeListener(`${IMAGE_CHANGE_PREFIX}_dimensionChange`,
+                callback);
+        },
+        emitPixelChange({x, y, layerName}) {
+            this.emit(`${LAYER_CHANGE_PREFIX}_${layerName}_${x}-${y}`);
+        },
+        emitDimensionChange() {
+            this.emit(`${IMAGE_CHANGE_PREFIX}_dimensionChange`);
         }
     });
 
@@ -66,6 +84,10 @@ var CanvasStore = (function() {
             case constants.SET_PIXEL:
                 CanvasStore.setPixel(action);
                 break;
+            case constants.SET_DIMENSIONS:
+                CanvasStore.setDimensions(action);
+                break;
+            default:
         }
     });
     

@@ -27,6 +27,11 @@ var PixelCanvas = (function () {
                 height: "100%"
             };
         },
+        getInitialState: function getInitialState() {
+            return {
+                pxSize: 1
+            };
+        },
         componentWillMount: function componentWillMount() {
             // Listen for resize events
             window.addEventListener("resize", this.handleResize);
@@ -61,31 +66,28 @@ var PixelCanvas = (function () {
                         height: this.props.height
                     } },
                 layers.map(function (layer, index) {
-                    var ret = React.createElement(PixelLayer, { key: index, ref: "layer-" + index, layerName: layer });
+                    var ret = React.createElement(PixelLayer, { key: index, ref: "layer-" + index,
+                        layerName: layer, pxSize: _this.state.pxSize });
                     _this.numLayers++;
                     return ret;
                 }),
-                React.createElement(PixelLayer, { layerName: "current", ref: "layer-" + this.numLayers++ })
+                React.createElement(PixelLayer, { layerName: "current",
+                    ref: "layer-" + this.numLayers++,
+                    pxSize: this.state.pxSize })
             );
         },
         handleResize: function handleResize() {
-            // If we haven't already set a timeout to handle the resize event, then
-            // set it to 1 second
+            // If we haven't already set a timeout to handle the resize event,
+            // then set it to 1 second
             if (!this.resizeTimeout) {
                 this.resizeTimeout = setTimeout(this.updateDimensions, 1000);
             }
         },
         updateDimensions: function updateDimensions() {
-            // Update our stored dimensions.
-            this.dim = {
-                width: this.node.offsetWidth,
-                height: this.node.offsetHeight
-            };
-
-            // Update the dimensions of our child elements
-            for (var i = 0; i < this.numLayers; ++i) {
-                this.refs["layer-" + i].updateDimensions({ parent: this });
-            }
+            // Update our stored size.
+            this.setState({
+                pxSize: Math.min(this.node.offsetWidth, this.node.offsetHeight)
+            });
 
             // Clear the resize timeout
             this.resizeTimeout = false;

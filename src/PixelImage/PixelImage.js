@@ -20,9 +20,12 @@ var PixelImage = (function() {
             
             this.width = this.layers.main.width;
             this.height = this.layers.main.height;
+            
+            this.layerNames = ["main"];
         }
         validLayerName(name) {
-            return _.isString(name) && name !== "current";
+            return _.isString(name) && name !== "current" &&
+                this.layerNames.indexOf(name) === -1;
         }
         addLayer(name) {
             if (this.validLayerName(name)) {
@@ -35,13 +38,20 @@ var PixelImage = (function() {
             return this.layers[name];
         }
         getLayers() {
-            let layerNames = [];
-            for (let key in this.layers) {
-                if (this.layers.hasOwnProperty(key) && key !== "current") {
-                    layerNames.push(key);
-                }
+            return this.layerNames;
+        }
+        setDimensions({width = this.width, height = this.height}) {
+            for (let layerName of this.layerNames) {
+                this.layers[layerName].setDimensions(width, height);
             }
-            return layerNames;
+            this.width = width;
+            this.height = height;
+        }
+        getDimensions() {
+            return {
+                width: this.width,
+                height: this.height
+            };
         }
     }
 

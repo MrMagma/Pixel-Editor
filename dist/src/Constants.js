@@ -3,7 +3,8 @@
 var constants = (function () {
 
     var constants = {
-        SET_PIXEL: "setPixel"
+        SET_PIXEL: "setPixel",
+        SET_DIMENSIONS: "setDim"
     };
 
     // We don't want anyone accidentally messing with our constants

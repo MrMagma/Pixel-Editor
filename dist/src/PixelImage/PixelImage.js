@@ -28,12 +28,14 @@ var PixelImage = (function () {
 
             this.width = this.layers.main.width;
             this.height = this.layers.main.height;
+
+            this.layerNames = ["main"];
         }
 
         _createClass(PixelImage, [{
             key: "validLayerName",
             value: function validLayerName(name) {
-                return _.isString(name) && name !== "current";
+                return _.isString(name) && name !== "current" && this.layerNames.indexOf(name) === -1;
             }
         }, {
             key: "addLayer",
@@ -54,13 +56,50 @@ var PixelImage = (function () {
         }, {
             key: "getLayers",
             value: function getLayers() {
-                var layerNames = [];
-                for (var key in this.layers) {
-                    if (this.layers.hasOwnProperty(key) && key !== "current") {
-                        layerNames.push(key);
+                return this.layerNames;
+            }
+        }, {
+            key: "setDimensions",
+            value: function setDimensions(_ref) {
+                var _ref$width = _ref.width;
+                var width = _ref$width === undefined ? this.width : _ref$width;
+                var _ref$height = _ref.height;
+                var height = _ref$height === undefined ? this.height : _ref$height;
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = this.layerNames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var layerName = _step.value;
+
+                        this.layers[layerName].setDimensions(width, height);
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
                     }
                 }
-                return layerNames;
+
+                this.width = width;
+                this.height = height;
+            }
+        }, {
+            key: "getDimensions",
+            value: function getDimensions() {
+                return {
+                    width: this.width,
+                    height: this.height
+                };
             }
         }]);
 
