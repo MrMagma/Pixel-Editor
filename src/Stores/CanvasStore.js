@@ -39,13 +39,20 @@ var CanvasStore = (function() {
         },
         setPixel(action) {
             let {layerName, x, y} = action;
-            let layer = pixelImage.getLayer(layerName);
+            let layer = pixelImage.getLayer(layerName),
+                pixel = layer.getPixel(x, y);
+            let originalRGB = pixel.getRGB();
             layer.setPixelRGB(action);
-            this.emitPixelChange({
-                x: x,
-                y: y,
-                layerName: layer.layerName
-            });
+            // Do this because we don't want to say a pixel has been changed
+            // if nothing actually changed as that would trigger a render and
+            // rendering is expensive.
+            if (pixel.getRGB() !== originalRGB) {
+                this.emitPixelChange({
+                    x: x,
+                    y: y,
+                    layerName: layer.layerName
+                });
+            }
         },
         setDimensions(action) {
             pixelImage.setDimensions(action);

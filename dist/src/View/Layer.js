@@ -3,6 +3,7 @@
 var PixelLayer = (function () {
 
     var React = require("react");
+    var ReactDOM = require("react-dom");
 
     var CanvasStore = require("../Stores/CanvasStore.js");
     var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
@@ -12,10 +13,26 @@ var PixelLayer = (function () {
 
     // Gets the up to date state of the current PixelLayer component
     function getState() {
+        var w = CanvasStore.getWidth(),
+            h = CanvasStore.getHeight();
         return {
-            canvasWidth: CanvasStore.getWidth(),
-            canvasHeight: CanvasStore.getHeight()
+            canvasWidth: w,
+            canvasHeight: h,
+            canvasSize: Math.min(w, h)
         };
+    }
+
+    function getNodePos(node) {
+        var pos = {
+            x: 0,
+            y: 0
+        };
+        while (node) {
+            pos.x += node.offsetLeft;
+            pos.y += node.offsetTop;
+            node = node.offsetParent;
+        }
+        return pos;
     }
 
     var PixelLayer = React.createClass({
@@ -34,6 +51,8 @@ var PixelLayer = (function () {
                 layerName: this.trueLayerName(),
                 callback: this.handlePixelChange
             });
+            document.addEventListener("mouseup", this.endDrag);
+            this.context = ReactDOM.findDOMNode(this).getContext("2d");
         },
         componentWillUnmount: function componentWillUnmount() {
             CanvasStore.offDimensionChange({
@@ -43,34 +62,30 @@ var PixelLayer = (function () {
                 layerName: this.trueLayerName(),
                 callback: this.handlePixelChange
             });
+            document.removeEventListener("mouseup", this.endDrag);
+        },
+        componentDidUpdate: function componentDidUpdate() {
+            this.paint();
         },
         render: function render() {
-            var children = [];
-            var w = this.state.canvasWidth,
-                h = this.state.canvasHeight;
-
-            // Add one Pixel component for every pixel on this layer to the
-            // array of children to render
-            var pxSize = this.props.pxSize / Math.min(w, h);
-            for (var x = 0; x < w; x++) {
-                for (var y = 0; y < h; y++) {
-                    children.push(React.createElement(Pixel, { canvasX: x, canvasY: y, pxSize: pxSize,
-                        layerName: this.trueLayerName(), key: x + w * y,
-                        ref: "pixel-" + x + "-" + y }));
-                }
+            return React.createElement("canvas", { style: {
+                    position: "absolute",
+                    top: 0,
+                    left: 0
+                }, width: this.props.pxSize, height: this.props.pxSize,
+                onMouseDown: this.startDrag, onMouseMove: this.handleDrag });
+        },
+        startDrag: function startDrag(evt) {
+            this.setPixelFromEvent(evt);
+            this.dragging = true;
+        },
+        endDrag: function endDrag() {
+            this.dragging = false;
+        },
+        handleDrag: function handleDrag(evt) {
+            if (this.dragging) {
+                this.setPixelFromEvent(evt);
             }
-
-            return React.createElement(
-                "div",
-                { style: {
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        bottom: 0,
-                        right: 0
-                    } },
-                children
-            );
         },
         handleChange: function handleChange() {
             this.setState(getState());
@@ -79,10 +94,46 @@ var PixelLayer = (function () {
             var x = _ref.x;
             var y = _ref.y;
 
-            this.refs["pixel-" + x + "-" + y].updateColor();
+            this.paintPixel(x, y);
         },
         trueLayerName: function trueLayerName() {
             return CanvasStore.getTrueLayerName(this.props.layerName);
+        },
+        setPixelFromEvent: function setPixelFromEvent(evt) {
+            var offset = getNodePos(evt.target);
+            var pos = {
+                x: Math.floor((evt.pageX - offset.x) / this.props.pxSize * this.state.canvasWidth),
+                y: Math.floor((evt.pageY - offset.y) / this.props.pxSize * this.state.canvasHeight)
+            };
+            this.setPixel(pos.x, pos.y);
+        },
+        setPixel: function setPixel(x, y) {
+            CanvasDispatcher.dispatch({
+                actionType: constants.SET_PIXEL,
+                x: x,
+                y: y,
+                color: [0, 0, 0, 1.0]
+            });
+        },
+        paintPixel: function paintPixel(canvasX, canvasY) {
+            var pxSz = Math.floor(this.props.pxSize / this.state.canvasSize);
+            this.context.clearRect(canvasX * pxSz, canvasY * pxSz, pxSz, pxSz);
+            this.context.fillStyle = CanvasStore.getPixelRGB({
+                x: canvasX,
+                y: canvasY,
+                layer: this.trueLayerName()
+            });
+            this.context.fillRect(canvasX * pxSz, canvasY * pxSz, pxSz, pxSz);
+        },
+        paint: function paint() {
+            this.context.clearRect(0, 0, this.props.pxSize, this.props.pxSize);
+            var w = this.state.canvasWidth,
+                h = this.state.canvasHeight;
+            for (var x = 0; x < w; x++) {
+                for (var y = 0; y < h; y++) {
+                    this.paintPixel(x, y);
+                }
+            }
         }
     });
 
