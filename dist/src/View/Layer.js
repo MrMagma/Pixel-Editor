@@ -24,6 +24,9 @@ var PixelLayer = (function () {
             return getState();
         },
         componentDidMount: function componentDidMount() {
+            // TODO (Joshua): This is bad for the current layer, as at any
+            // time it could be receiving changes from any layer. This should
+            // be fixed soon.
             CanvasStore.onDimensionChange({
                 callback: this.handleChange
             });
@@ -35,6 +38,10 @@ var PixelLayer = (function () {
         componentWillUnmount: function componentWillUnmount() {
             CanvasStore.offDimensionChange({
                 callback: this.handleChange
+            });
+            CanvasStore.onPixelChange({
+                layerName: this.trueLayerName(),
+                callback: this.handlePixelChange
             });
         },
         render: function render() {

@@ -11,7 +11,9 @@ ReactDOM.render(
     mainContainer
 );
 
-function onClick() {
+/* Begin sloppy stuff that will be removed in the near future and is currently
+ just here for testing */
+function increaseSz() {
     var curDim = CanvasStore.getDimensions();
     CanvasStore.setDimensions({
         width: curDim.width + 1,
@@ -19,4 +21,16 @@ function onClick() {
     });
 }
 
-document.getElementById("btn").addEventListener("click", onClick);
+function decreaseSz() {
+    var curDim = CanvasStore.getDimensions();
+    CanvasStore.setDimensions({
+        width: curDim.width - 1,
+        height: curDim.height - 1
+    });
+}
+
+document.getElementById("increase").addEventListener("click", increaseSz);
+document.getElementById("decrease").addEventListener("click", decreaseSz);
+
+/* End sloppy stuff that will be removed in the near future and is currently
+ just here for testing */
