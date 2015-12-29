@@ -9,6 +9,7 @@
 #main-container > canvas {
   margin: 1em;
 }
-.pixel {
-  border: 1px solid #000;
+.pixel-canvas-layer {
+/* Comment */
+  cursor: pointer;
 }

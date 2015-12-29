@@ -7,6 +7,9 @@ var PixelLayer = (function() {
     var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
     var constants = require("../Constants.js");
     
+    // TODO (Joshua): Eventually make this a paintbrush or something.
+    const PAINT_CURSOR = "pointer";
+    
     // Gets the up to date state of the current PixelLayer component
     function getState() {
         let w = CanvasStore.getWidth(), h = CanvasStore.getHeight();
@@ -67,14 +70,21 @@ var PixelLayer = (function() {
                 top: 0,
                 left: 0
             }} width={this.props.pxSize} height={this.props.pxSize}
-                onMouseDown={this.startDrag} onMouseMove={this.handleDrag}>
+                onMouseDown={this.startDrag} onMouseMove={this.handleDrag}
+                className="pixel-canvas-layer">
                 </canvas>;
         },
         startDrag(evt) {
+            // Store the previous cursor style of the body so we can reset it
+            // later
+            this.pBodyCursor = document.body.style.cursor;
+            document.body.style.cursor = PAINT_CURSOR;
             this.setPixelFromEvent(evt);
             this.dragging = true;
         },
         endDrag() {
+            // Reset the cursor
+            document.body.style.cursor = this.pBodyCursor;
             this.dragging = false;
         },
         handleDrag(evt) {
