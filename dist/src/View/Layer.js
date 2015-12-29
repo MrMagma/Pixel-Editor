@@ -9,8 +9,6 @@ var PixelLayer = (function () {
     var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
     var constants = require("../Constants.js");
 
-    var Pixel = require("./Pixel.jsx");
-
     // Gets the up to date state of the current PixelLayer component
     function getState() {
         var w = CanvasStore.getWidth(),
