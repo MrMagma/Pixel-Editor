@@ -19,26 +19,6 @@ var Pixel = (function () {
                 })
             };
         },
-        componentDidMount: function componentDidMount() {
-            // Add a listener on the store for changes on the pixel that this
-            // component represents
-            CanvasStore.onPixelChange({
-                layerName: this.props.layerName,
-                x: this.props.canvasX,
-                y: this.props.canvasY,
-                callback: this.handleChange
-            });
-        },
-        componentWillUnmount: function componentWillUnmount() {
-            // Unbind all of the listeners this component has created and do
-            // general clean up
-            CanvasStore.offPixelChange({
-                layerName: this.props.layerName,
-                x: this.props.canvasX,
-                y: this.props.canvasY,
-                callback: this.handleChange
-            });
-        },
         render: function render() {
             return React.createElement("div", { style: {
                     display: "inline-block",
@@ -52,7 +32,7 @@ var Pixel = (function () {
                         y: this.props.canvasY,
                         layer: this.props.layerName
                     })
-                }, onClick: this.handleClick });
+                }, onClick: this.handleClick, className: "pixel" });
         },
         handleClick: function handleClick() {
             // Handle any click events on this Pixel, passing them to the
@@ -67,7 +47,7 @@ var Pixel = (function () {
                 color: [0, 0, 0, 1.0]
             });
         },
-        handleChange: function handleChange() {
+        updateColor: function updateColor() {
             // This method should be called whenever the pixel that this
             // Component represents is changed, so update our shtuff.
             this.setState({

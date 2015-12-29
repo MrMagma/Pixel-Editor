@@ -69,19 +69,15 @@ var CanvasStore = (function () {
 
         onPixelChange: function onPixelChange(_ref) {
             var layerName = _ref.layerName;
-            var x = _ref.x;
-            var y = _ref.y;
             var callback = _ref.callback;
 
-            this.on(LAYER_CHANGE_PREFIX + "_" + layerName + "_" + x + "-" + y, callback);
+            this.on(LAYER_CHANGE_PREFIX + "_" + layerName, callback);
         },
         offPixelChange: function offPixelChange(_ref2) {
             var layerName = _ref2.layerName;
-            var x = _ref2.x;
-            var y = _ref2.y;
             var callback = _ref2.callback;
 
-            this.removeListener(LAYER_CHANGE_PREFIX + "_" + layerName + "_" + x + "-" + y, callback);
+            this.removeListener(LAYER_CHANGE_PREFIX + "_" + layerName, callback);
         },
         onDimensionChange: function onDimensionChange(_ref3) {
             var callback = _ref3.callback;
@@ -98,7 +94,10 @@ var CanvasStore = (function () {
             var y = _ref5.y;
             var layerName = _ref5.layerName;
 
-            this.emit(LAYER_CHANGE_PREFIX + "_" + layerName + "_" + x + "-" + y);
+            this.emit(LAYER_CHANGE_PREFIX + "_" + layerName, {
+                x: x,
+                y: y
+            });
         },
         emitDimensionChange: function emitDimensionChange() {
             this.emit(IMAGE_CHANGE_PREFIX + "_dimensionChange");

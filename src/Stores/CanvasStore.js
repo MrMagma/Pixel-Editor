@@ -57,11 +57,11 @@ var CanvasStore = (function() {
         // Maybe make things just able to listen for changes in a layer, and
         // then leave it up to the listener to determine if the event was
         // relevant to them
-        onPixelChange({layerName, x, y, callback}) {
-            this.on(`${LAYER_CHANGE_PREFIX}_${layerName}_${x}-${y}`, callback);           
+        onPixelChange({layerName, callback}) {
+            this.on(`${LAYER_CHANGE_PREFIX}_${layerName}`, callback);           
         },
-        offPixelChange({layerName, x, y, callback}) {
-            this.removeListener(`${LAYER_CHANGE_PREFIX}_${layerName}_${x}-${y}`,
+        offPixelChange({layerName, callback}) {
+            this.removeListener(`${LAYER_CHANGE_PREFIX}_${layerName}`,
                     callback);
         },
         onDimensionChange({callback}) {
@@ -72,7 +72,10 @@ var CanvasStore = (function() {
                 callback);
         },
         emitPixelChange({x, y, layerName}) {
-            this.emit(`${LAYER_CHANGE_PREFIX}_${layerName}_${x}-${y}`);
+            this.emit(`${LAYER_CHANGE_PREFIX}_${layerName}`, {
+                x: x,
+                y: y
+            });
         },
         emitDimensionChange() {
             this.emit(`${IMAGE_CHANGE_PREFIX}_dimensionChange`);

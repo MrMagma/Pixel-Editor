@@ -27,6 +27,10 @@ var PixelLayer = (function () {
             CanvasStore.onDimensionChange({
                 callback: this.handleChange
             });
+            CanvasStore.onPixelChange({
+                layerName: this.trueLayerName(),
+                callback: this.handlePixelChange
+            });
         },
         componentWillUnmount: function componentWillUnmount() {
             CanvasStore.offDimensionChange({
@@ -63,6 +67,12 @@ var PixelLayer = (function () {
         },
         handleChange: function handleChange() {
             this.setState(getState());
+        },
+        handlePixelChange: function handlePixelChange(_ref) {
+            var x = _ref.x;
+            var y = _ref.y;
+
+            this.refs["pixel-" + x + "-" + y].updateColor();
         },
         trueLayerName: function trueLayerName() {
             return CanvasStore.getTrueLayerName(this.props.layerName);
