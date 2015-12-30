@@ -27,11 +27,11 @@ var CanvasStore = (function() {
         getHeight() {
             return pixelImage.height;
         },
-        getPixelRGB(cfg = {}) {
+        getPixelHSL(cfg = {}) {
             let {x, y, layer = "current"} = cfg;
             if (_.isNumber(x) && !_.isNaN(x) &&
                 _.isNumber(y) && !_.isNaN(y)) {
-                return pixelImage.getLayer(layer).getPixel(x, y).getRGB();
+                return pixelImage.getLayer(layer).getPixel(x, y).getHSL();
             } else {
                 throw new TypeError("Coordinates must be numbers and not NaN");
             }
@@ -47,12 +47,12 @@ var CanvasStore = (function() {
             let {layerName, x, y} = action;
             let layer = pixelImage.getLayer(layerName),
                 pixel = layer.getPixel(x, y);
-            let originalRGB = pixel.getRGB();
-            layer.setPixelRGB(action);
+            let originalHSL = pixel.getHSL();
+            layer.setPixelHSL(action);
             // Do this because we don't want to say a pixel has been changed
             // if nothing actually changed as that would trigger a render and
             // rendering is expensive.
-            if (pixel.getRGB() !== originalRGB) {
+            if (pixel.getHSL() !== originalHSL) {
                 this.emitPixelChange({
                     x: x,
                     y: y,
@@ -65,10 +65,10 @@ var CanvasStore = (function() {
             this.emitDimensionChange();
         },
         setBrushColor({color}) {
-            let [r, g, b, a = brushColor[3]] = color;
-            brushColor[0] = r;
-            brushColor[1] = g;
-            brushColor[2] = b;
+            let [h, s, l, a = brushColor[3]] = color;
+            brushColor[0] = h;
+            brushColor[1] = s;
+            brushColor[2] = l;
             brushColor[3] = a;
             this.emitBrushChange();
         }

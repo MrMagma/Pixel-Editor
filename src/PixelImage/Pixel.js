@@ -2,21 +2,22 @@ var Pixel = (function() {
     
     class Pixel {
         constructor() {
-            this.red = 0;
-            this.green = 0;
-            this.blue = 0;
+            this.hue = 0;
+            this.saturation = 0;
+            this.lightness = 0;
             this.alpha = 0.0;
         }
-        get rgb() {
-            return `rgba(${this.red}, ${this.green}, ${this.blue}, ${this.alpha})`;
+        get hsl() {
+            return `hsla(${this.hue}, ${this.saturation}%,` +
+                `${this.lightness}%, ${this.alpha})`;
         }
-        getRGB() {
-            return this.rgb;
+        getHSL() {
+            return this.hsl;
         }
-        setRGB([r, g, b, a = 1.0]) {
-            this.red = r;
-            this.green = g;
-            this.blue = b;
+        setHSL([h, s, l, a = 1.0]) {
+            this.hue = h;
+            this.saturation = s;
+            this.lightness = l;
             this.alpha = a;
         }
     }

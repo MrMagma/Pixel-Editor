@@ -51,15 +51,15 @@ var PixelLayer = (function () {
                 }
             }
         }, {
-            key: "setPixelRGB",
-            value: function setPixelRGB() {
+            key: "setPixelHSL",
+            value: function setPixelHSL() {
                 var cfg = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
                 var x = cfg.x;
                 var y = cfg.y;
                 var color = cfg.color;
 
                 if (this.isInBounds(x, y)) {
-                    this.pixelMap[x][y].setRGB(color);
+                    this.pixelMap[x][y].setHSL(color);
                 } else {
                     throw new RangeError("Coordinates (" + x + ", " + y + ") are out of range");
                 }

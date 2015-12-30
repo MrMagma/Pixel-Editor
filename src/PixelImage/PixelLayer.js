@@ -32,10 +32,10 @@ var PixelLayer = (function() {
                 throw new RangeError(`Coordinates (${x}, ${y}) are out of range`);
             }
         }
-        setPixelRGB(cfg = {}) {
+        setPixelHSL(cfg = {}) {
             let {x, y, color} = cfg;
             if (this.isInBounds(x, y)) {
-                this.pixelMap[x][y].setRGB(color);
+                this.pixelMap[x][y].setHSL(color);
             } else {
                 throw new RangeError(`Coordinates (${x}, ${y}) are out of range`);
             }

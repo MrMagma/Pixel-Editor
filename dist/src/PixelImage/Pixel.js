@@ -11,37 +11,37 @@ var Pixel = (function () {
         function Pixel() {
             _classCallCheck(this, Pixel);
 
-            this.red = 0;
-            this.green = 0;
-            this.blue = 0;
+            this.hue = 0;
+            this.saturation = 0;
+            this.lightness = 0;
             this.alpha = 0.0;
         }
 
         _createClass(Pixel, [{
-            key: "getRGB",
-            value: function getRGB() {
-                return this.rgb;
+            key: "getHSL",
+            value: function getHSL() {
+                return this.hsl;
             }
         }, {
-            key: "setRGB",
-            value: function setRGB(_ref) {
+            key: "setHSL",
+            value: function setHSL(_ref) {
                 var _ref2 = _slicedToArray(_ref, 4);
 
-                var r = _ref2[0];
-                var g = _ref2[1];
-                var b = _ref2[2];
+                var h = _ref2[0];
+                var s = _ref2[1];
+                var l = _ref2[2];
                 var _ref2$ = _ref2[3];
                 var a = _ref2$ === undefined ? 1.0 : _ref2$;
 
-                this.red = r;
-                this.green = g;
-                this.blue = b;
+                this.hue = h;
+                this.saturation = s;
+                this.lightness = l;
                 this.alpha = a;
             }
         }, {
-            key: "rgb",
+            key: "hsl",
             get: function get() {
-                return "rgba(" + this.red + ", " + this.green + ", " + this.blue + ", " + this.alpha + ")";
+                return "hsla(" + this.hue + ", " + this.saturation + "%," + (this.lightness + "%, " + this.alpha + ")");
             }
         }]);
 

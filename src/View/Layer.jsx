@@ -122,7 +122,7 @@ var PixelLayer = (function() {
         paintPixel(canvasX, canvasY) {
             let pxSz = Math.floor(this.props.pxSize / this.state.canvasSize);
             this.context.clearRect(canvasX * pxSz, canvasY * pxSz, pxSz, pxSz);
-            this.context.fillStyle = CanvasStore.getPixelRGB({
+            this.context.fillStyle = CanvasStore.getPixelHSL({
                 x: canvasX,
                 y: canvasY,
                 layer: this.trueLayerName()

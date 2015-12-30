@@ -31,7 +31,7 @@ var CanvasStore = (function () {
         getHeight: function getHeight() {
             return pixelImage.height;
         },
-        getPixelRGB: function getPixelRGB() {
+        getPixelHSL: function getPixelHSL() {
             var cfg = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
             var x = cfg.x;
             var y = cfg.y;
@@ -39,7 +39,7 @@ var CanvasStore = (function () {
             var layer = _cfg$layer === undefined ? "current" : _cfg$layer;
 
             if (_.isNumber(x) && !_.isNaN(x) && _.isNumber(y) && !_.isNaN(y)) {
-                return pixelImage.getLayer(layer).getPixel(x, y).getRGB();
+                return pixelImage.getLayer(layer).getPixel(x, y).getHSL();
             } else {
                 throw new TypeError("Coordinates must be numbers and not NaN");
             }
@@ -57,12 +57,12 @@ var CanvasStore = (function () {
 
             var layer = pixelImage.getLayer(layerName),
                 pixel = layer.getPixel(x, y);
-            var originalRGB = pixel.getRGB();
-            layer.setPixelRGB(action);
+            var originalHSL = pixel.getHSL();
+            layer.setPixelHSL(action);
             // Do this because we don't want to say a pixel has been changed
             // if nothing actually changed as that would trigger a render and
             // rendering is expensive.
-            if (pixel.getRGB() !== originalRGB) {
+            if (pixel.getHSL() !== originalHSL) {
                 this.emitPixelChange({
                     x: x,
                     y: y,
@@ -79,15 +79,15 @@ var CanvasStore = (function () {
 
             var _color = _slicedToArray(color, 4);
 
-            var r = _color[0];
-            var g = _color[1];
-            var b = _color[2];
+            var h = _color[0];
+            var s = _color[1];
+            var l = _color[2];
             var _color$ = _color[3];
             var a = _color$ === undefined ? brushColor[3] : _color$;
 
-            brushColor[0] = r;
-            brushColor[1] = g;
-            brushColor[2] = b;
+            brushColor[0] = h;
+            brushColor[1] = s;
+            brushColor[2] = l;
             brushColor[3] = a;
             this.emitBrushChange();
         }
