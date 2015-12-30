@@ -72,7 +72,7 @@ var PixelLayer = (function() {
             }} width={this.props.pxSize} height={this.props.pxSize}
                 onMouseDown={this.startDrag} onMouseMove={this.handleDrag}
                 className="pixel-canvas-layer">
-                </canvas>;
+            </canvas>;
         },
         startDrag(evt) {
             // Store the previous cursor style of the body so we can reset it
