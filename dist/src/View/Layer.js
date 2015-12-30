@@ -120,7 +120,7 @@ var PixelLayer = (function () {
                 actionType: constants.SET_PIXEL,
                 x: x,
                 y: y,
-                color: [0, 0, 0, 1.0]
+                color: CanvasStore.getBrushColor()
             });
         },
         paintPixel: function paintPixel(canvasX, canvasY) {

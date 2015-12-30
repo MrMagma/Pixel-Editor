@@ -9,8 +9,10 @@ var CanvasStore = (function() {
     
     const IMAGE_CHANGE_PREFIX = "imageChange";
     const LAYER_CHANGE_PREFIX = "layerChange";
+    const BRUSH_CHANGE_EVENT = "brushChange";
     
     var pixelImage = new PixelImage();
+    var brushColor = [0, 0, 0, 1.0];
 
     var CanvasStore = {
         getLayers() {
@@ -37,6 +39,10 @@ var CanvasStore = (function() {
         getDimensions() {
             return pixelImage.getDimensions();
         },
+        getBrushColor() {
+            return [brushColor[0], brushColor[1],
+                brushColor[2], brushColor[3]];
+        },
         setPixel(action) {
             let {layerName, x, y} = action;
             let layer = pixelImage.getLayer(layerName),
@@ -57,6 +63,14 @@ var CanvasStore = (function() {
         setDimensions(action) {
             pixelImage.setDimensions(action);
             this.emitDimensionChange();
+        },
+        setBrushColor({color}) {
+            let [r, g, b, a = brushColor[3]] = color;
+            brushColor[0] = r;
+            brushColor[1] = g;
+            brushColor[2] = b;
+            brushColor[3] = a;
+            this.emitBrushChange();
         }
     };
     
@@ -78,6 +92,12 @@ var CanvasStore = (function() {
             this.removeListener(`${IMAGE_CHANGE_PREFIX}_dimensionChange`,
                 callback);
         },
+        onBrushChange({callback}) {
+            this.on(BRUSH_CHANGE_EVENT, callback);
+        },
+        offBrushChange({callback}) {
+            this.removeListener(BRUSH_CHANGE_EVENT, callback);
+        },
         emitPixelChange({x, y, layerName}) {
             this.emit(`${LAYER_CHANGE_PREFIX}_${layerName}`, {
                 x: x,
@@ -86,6 +106,9 @@ var CanvasStore = (function() {
         },
         emitDimensionChange() {
             this.emit(`${IMAGE_CHANGE_PREFIX}_dimensionChange`);
+        },
+        emitBrushChange() {
+            this.emit(BRUSH_CHANGE_EVENT);
         }
     });
 
@@ -96,6 +119,9 @@ var CanvasStore = (function() {
                 break;
             case constants.SET_DIMENSIONS:
                 CanvasStore.setDimensions(action);
+                break;
+            case constants.SET_BRUSH:
+                CanvasStore.setBrushColor(action);
                 break;
             default:
         }

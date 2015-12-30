@@ -1,13 +1,17 @@
 var React = require("react");
 var ReactDOM = require("react-dom");
 
-var Canvas = require("./View/Canvas.jsx");
+var PixelCanvas = require("./View/Canvas.jsx");
+var ColorPicker = require("./View/ColorPicker.jsx");
 var CanvasStore = require("./Stores/CanvasStore.js");
 
 var mainContainer = document.getElementById("main-container");
 
 ReactDOM.render(
-    <Canvas></Canvas>,
+    <div>
+        <PixelCanvas></PixelCanvas>
+        <ColorPicker></ColorPicker>
+    </div>,
     mainContainer
 );
 

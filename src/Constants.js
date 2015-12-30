@@ -2,7 +2,8 @@ var constants = (function() {
 
     let constants = {
         SET_PIXEL: "setPixel",
-        SET_DIMENSIONS: "setDim"
+        SET_DIMENSIONS: "setDim",
+        SET_BRUSH: "setBrushColor"
     };
     
     // We don't want anyone accidentally messing with our constants

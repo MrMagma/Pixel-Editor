@@ -3,12 +3,18 @@
 var React = require("react");
 var ReactDOM = require("react-dom");
 
-var Canvas = require("./View/Canvas.jsx");
+var PixelCanvas = require("./View/Canvas.jsx");
+var ColorPicker = require("./View/ColorPicker.jsx");
 var CanvasStore = require("./Stores/CanvasStore.js");
 
 var mainContainer = document.getElementById("main-container");
 
-ReactDOM.render(React.createElement(Canvas, null), mainContainer);
+ReactDOM.render(React.createElement(
+    "div",
+    null,
+    React.createElement(PixelCanvas, null),
+    React.createElement(ColorPicker, null)
+), mainContainer);
 
 /* Begin sloppy stuff that will be removed in the near future and is currently
  just here for testing */
