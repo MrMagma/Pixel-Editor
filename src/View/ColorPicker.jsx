@@ -21,10 +21,13 @@ var ColorPicker = (function() {
         },
         getInitialState() {
             return {
-                hue: 270,
-                saturation: 100,
-                lightness: 50,
-                alpha: 1.0
+                hue: (this.props.hue !== undefined) ? this.props.hue : 270,
+                saturation: (this.props.saturation !== undefined) ?
+                    this.props.saturation : 100,
+                lightness: (this.props.lightness !== undefined) ?
+                    this.props.lightness : 50,
+                alpha: (this.props.alpha !== undefined) ?
+                    this.props.alpha : 1.0
             };
         },
         render() {
@@ -43,10 +46,12 @@ var ColorPicker = (function() {
                     width: "80%",
                     backgroundColor: `hsla(${this.state.hue}, 100%, 50%, 1.0)`
                 }}></div>
-                <FancySlider minX={0} maxX={100} onChange={this.handleSLChange}
-                    minY={0} maxY={100} valueX={this.state.saturation}
+                <FancySlider minX={0} maxX={100} minY={0} maxY={100}
+                    valueX={this.state.saturation}
                     valueY={100 - (this.state.lightness /
                         (1 - this.state.saturation / 200))}
+                    onChange={this.handleSLChange}
+                    onDragEnd={this.handleDragEnd}
                     knobStyle={{
                         position: "absolute",
                         top: -7,
@@ -68,7 +73,9 @@ var ColorPicker = (function() {
                         background: "url(Resources/ColorPickerOverlay.png) no-repeat"
                     }}/>
                 <FancySlider minY={0} maxY={360}
-                    valueY={360 - this.state.hue} onChange={this.handleHueChange}
+                    valueY={360 - this.state.hue}
+                    onChange={this.handleHueChange}
+                    onDragEnd={this.handleDragEnd}
                     knobStyle={{
                         position: "absolute",
                         top: -15,
