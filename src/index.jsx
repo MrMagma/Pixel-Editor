@@ -1,3 +1,5 @@
+require("babel-polyfill");
+
 var React = require("react");
 var ReactDOM = require("react-dom");
 
@@ -13,7 +15,6 @@ var startBrush = CanvasStore.getBrushColor();
 /* Begin sloppy stuff that will be removed in the near future and is currently
  just here for testing */
 function onColorChange(color) {
-    console.log("HI");
     CanvasDispatcher.dispatch({
         actionType: constants.SET_BRUSH,
         color: [color.hue, color.saturation,
