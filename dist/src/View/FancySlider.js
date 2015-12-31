@@ -49,7 +49,6 @@ var FancySlider = (function () {
             this.uid = ++uid;
             window.addEventListener("mouseup", this.endDrag);
             window.addEventListener("mousemove", this.handleDrag);
-            this.node = ReactDOM.findDOMNode(this);
         },
         componentWillUnmount: function componentWillUnmount() {
             window.removeEventListener("mouseup", this.endDrag);
@@ -58,7 +57,7 @@ var FancySlider = (function () {
         render: function render() {
             return React.createElement(
                 "div",
-                { style: this.props.trackStyle,
+                { ref: "node", style: this.props.trackStyle,
                     onMouseDown: this.startDrag },
                 React.createElement(
                     "div",
@@ -84,22 +83,26 @@ var FancySlider = (function () {
                 this.updateKnob(evt);
             }
         },
-        endDrag: function endDrag() {
+        endDrag: function endDrag(evt) {
             if (dragging) {
-                this.props.onDragEnd();
+                if (dragging.uid === this.uid) {
+                    this.updateKnob(evt);
+                    this.props.onDragEnd();
+                }
+                lastDragUpdate = -Infinity;
                 dragging = false;
             }
         },
         updateKnob: function updateKnob(evt) {
             evt.preventDefault();
             if (Date.now() - lastDragUpdate > MIN_DRAG_INTERVAL) {
-                var offset = getNodePos(this.node);
+                var offset = getNodePos(this.refs.node);
                 var pos = {
                     x: evt.pageX - offset.x,
                     y: evt.pageY - offset.y
                 };
-                var valX = pos.x / this.node.offsetWidth * (this.props.maxX - this.props.minX) + this.props.minX || 0,
-                    valY = pos.y / this.node.offsetHeight * (this.props.maxY - this.props.minY) + this.props.minY || 0;
+                var valX = pos.x / this.refs.node.offsetWidth * (this.props.maxX - this.props.minX) + this.props.minX || 0,
+                    valY = pos.y / this.refs.node.offsetHeight * (this.props.maxY - this.props.minY) + this.props.minY || 0;
 
                 if (valX < this.props.minX) {
                     valX = this.props.minX;
@@ -119,8 +122,8 @@ var FancySlider = (function () {
                 });
 
                 this.props.onChange({
-                    x: this.state.valueX,
-                    y: this.state.valueY
+                    x: valX,
+                    y: valY
                 });
             }
             lastDragUpdate = Date.now();

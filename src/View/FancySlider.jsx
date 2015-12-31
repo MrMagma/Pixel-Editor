@@ -48,14 +48,13 @@ var FancySlider = (function() {
             this.uid = ++uid;
             window.addEventListener("mouseup", this.endDrag);
             window.addEventListener("mousemove", this.handleDrag);
-            this.node = ReactDOM.findDOMNode(this);
         },
         componentWillUnmount() {
             window.removeEventListener("mouseup", this.endDrag);
             window.removeEventListener("mousemove", this.handleDrag);
         },
         render() {
-            return <div style={this.props.trackStyle}
+            return <div ref="node" style={this.props.trackStyle}
                 onMouseDown={this.startDrag}>
                 <div style={{
                     top: ((this.state.valueY - this.props.minY) /
@@ -83,24 +82,28 @@ var FancySlider = (function() {
                 this.updateKnob(evt);
             }
         },
-        endDrag() {
+        endDrag(evt) {
             if (dragging) {
-                this.props.onDragEnd();
+                if (dragging.uid === this.uid) {
+                    this.updateKnob(evt);
+                    this.props.onDragEnd();
+                }
+                lastDragUpdate = -Infinity;
                 dragging = false;
             }
         },
         updateKnob(evt) {
             evt.preventDefault();
             if (Date.now() - lastDragUpdate > MIN_DRAG_INTERVAL) {
-                let offset = getNodePos(this.node);
+                let offset = getNodePos(this.refs.node);
                 let pos = {
                     x: evt.pageX - offset.x,
                     y: evt.pageY - offset.y
                 };
-                let valX = ((pos.x / this.node.offsetWidth *
+                let valX = ((pos.x / this.refs.node.offsetWidth *
                     (this.props.maxX - this.props.minX)) +
                     this.props.minX) || 0,
-                    valY = ((pos.y / this.node.offsetHeight *
+                    valY = ((pos.y / this.refs.node.offsetHeight *
                         (this.props.maxY - this.props.minY)) +
                         this.props.minY) || 0;
                     
@@ -122,8 +125,8 @@ var FancySlider = (function() {
                 });
                 
                 this.props.onChange({
-                    x: this.state.valueX,
-                    y: this.state.valueY
+                    x: valX,
+                    y: valY
                 });
             }
             lastDragUpdate = Date.now();

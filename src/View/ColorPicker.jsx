@@ -6,12 +6,11 @@ var ColorPicker = (function() {
     var FancySlider = require("./FancySlider.jsx");
     var constants = require("../Constants.js");
     
-    function toBrushVal(c) {
-        let r = c.slice(1, 3),
-            g = c.slice(3, 5),
-            b = c.slice(5, 7);
-        return [r, g, b].map(val => parseInt(val, 16));
-    }
+    // var hues = [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240,
+    //     260, 280, 300, 320, 340, 360];
+    // var hueGradient = `linear-gradient(to left, ${
+    //     hues.map(hue => `hsla(${hue}, 100%, 50%, 1.0)`).join(",")
+    // })`;
     
     ColorPicker = React.createClass({
         getDefaultProps() {
@@ -42,16 +41,15 @@ var ColorPicker = (function() {
                     position: "absolute",
                     top: 0,
                     left: 0,
-                    height: "100%",
-                    width: "80%",
-                    backgroundColor: `hsla(${this.state.hue}, 100%, 50%, 1.0)`
+                    height: "50%",
+                    width: "100%",
+                    background: `hsla(${this.state.hue}, 100%, 50%, 1.0)`
                 }}></div>
                 <FancySlider minX={0} maxX={100} minY={0} maxY={100}
                     valueX={this.state.saturation}
                     valueY={100 - (this.state.lightness /
                         (1 - this.state.saturation / 200))}
                     onChange={this.handleSLChange}
-                    onDragEnd={this.handleDragEnd}
                     knobStyle={{
                         position: "absolute",
                         top: -7,
@@ -68,35 +66,44 @@ var ColorPicker = (function() {
                         position: "absolute",
                         top: 0,
                         left: 0,
-                        height: "100%",
-                        width: "80%",
-                        background: "url(Resources/ColorPickerOverlay.png) no-repeat"
+                        height: "50%",
+                        width: "100%",
+                        backgroundSize: "100% 100%",
+                        backgroundImage: "url(Resources/ColorPickerOverlay.png)"
                     }}/>
-                <FancySlider minY={0} maxY={360}
-                    valueY={360 - this.state.hue}
+                <FancySlider minX={0} maxX={360}
+                    valueX={360 - this.state.hue}
                     onChange={this.handleHueChange}
-                    onDragEnd={this.handleDragEnd}
                     knobStyle={{
                         position: "absolute",
-                        top: -15,
-                        width: 40,
-                        height: 10,
-                        borderRadius: "10%",
+                        top: -10,
+                        left: -10,
+                        width: 20,
+                        height: 20,
+                        borderRadius: "50%",
                         border: "5px solid #f8f8f8",
                         backgroundColor: `hsla(${this.state.hue}, 100%, 50%, 1.0)`
                     }} trackStyle={{
                         position: "absolute",
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        width: "20%",
-                        background: "url(Resources/ColorPickerTrack.png) no-repeat"
+                        top: "55%",
+                        left: "5%",
+                        width: "90%",
+                        height: "0.75em",
+                        borderRadius: "0.375em",
+                        backgroundSize: "100% 100%",
+                        backgroundImage: "url(Resources/ColorPickerTrack.png)"
                     }}/>
             </div>
         },
         handleHueChange(val) {
             this.setState({
-                hue: 360 - val.y
+                hue: 360 - val.x
+            });
+            this.props.onChange({
+                hue: this.state.hue,
+                saturation: this.state.saturation,
+                lightness: this.state.lightness,
+                alpha: this.state.alpha
             });
         },
         handleSLChange(val) {
@@ -109,8 +116,6 @@ var ColorPicker = (function() {
                 saturation: saturation,
                 lightness: lightness
             });
-        },
-        handleDragEnd() {
             this.props.onChange({
                 hue: this.state.hue,
                 saturation: this.state.saturation,
