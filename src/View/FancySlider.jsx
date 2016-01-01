@@ -33,7 +33,9 @@ var FancySlider = (function() {
                 trackStyle: {},
                 onChange() {},
                 onDragStart() {},
-                onDragEnd() {}
+                onDragEnd() {},
+                trackClass: "",
+                knobClass: ""
             }
         },
         getInitialState() {
@@ -54,7 +56,8 @@ var FancySlider = (function() {
             window.removeEventListener("mousemove", this.handleDrag);
         },
         render() {
-            return <div ref="node" style={this.props.trackStyle}
+            return <div className={this.props.trackClass}
+                ref="node" style={this.props.trackStyle}
                 onMouseDown={this.startDrag}>
                 <div style={{
                     top: ((this.state.valueY - this.props.minY) /
@@ -65,7 +68,8 @@ var FancySlider = (function() {
                         100 || 0) + "%",
                     position: "absolute"
                 }}>
-                    <div style={this.props.knobStyle}></div>
+                    <div className={this.props.knobClass}
+                        style={this.props.knobStyle}></div>
                 </div>
             </div>
         },

@@ -4,13 +4,19 @@ var ColorPicker = (function() {
     var CanvasStore = require("../Stores/CanvasStore.js");
     var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
     var FancySlider = require("./FancySlider.jsx");
+    var CheckerBoard = require("./CheckerBoard.jsx");
     var constants = require("../Constants.js");
     
-    // var hues = [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240,
-    //     260, 280, 300, 320, 340, 360];
-    // var hueGradient = `linear-gradient(to left, ${
-    //     hues.map(hue => `hsla(${hue}, 100%, 50%, 1.0)`).join(",")
-    // })`;
+    function makeKnobStyle(bgColor, offsetX, offsetY) {
+        return {
+            position: "absolute",
+            top: offsetX,
+            left: offsetY,
+            width: "1em",
+            height: "1em",
+            backgroundColor: bgColor
+        };
+    }
     
     ColorPicker = React.createClass({
         getDefaultProps() {
@@ -30,12 +36,12 @@ var ColorPicker = (function() {
             };
         },
         render() {
-            return <div style={{
+            return <div className="pixel-ui-box" style={{
                 position: "absolute",
                 bottom: 0,
                 right: 0,
                 width: 250,
-                height: 200
+                height: 250,
             }}>
                 <div style={{
                     position: "absolute",
@@ -45,24 +51,16 @@ var ColorPicker = (function() {
                     width: "100%",
                     background: `hsla(${this.state.hue}, 100%, 50%, 1.0)`
                 }}></div>
-                <FancySlider minX={0} maxX={100} minY={0} maxY={100}
+                <FancySlider knobClass="pixel-ui-slider-knob pixel-ui-shadowed"
+                    minX={0} maxX={100} minY={0} maxY={100}
                     valueX={this.state.saturation}
                     valueY={100 - (this.state.lightness /
                         (1 - this.state.saturation / 200))}
                     onChange={this.handleSLChange}
-                    knobStyle={{
-                        position: "absolute",
-                        top: -7,
-                        left: -7,
-                        width: 14,
-                        height: 14,
-                        borderRadius: "50%",
-                        border: "3px solid #f8f8f8",
-                        zIndex: "10",
-                        backgroundColor: `hsla(${this.state.hue},` +
-                            `${this.state.saturation}%,` +
-                            `${this.state.lightness}%, 1.0)`
-                    }} trackStyle={{
+                    knobStyle={makeKnobStyle(`hsla(${this.state.hue},` +
+                        `${this.state.saturation}%,` +
+                        `${this.state.lightness}%, 1.0)`, "-0.75em", "-0.75em")}
+                    trackStyle={{
                         position: "absolute",
                         top: 0,
                         left: 0,
@@ -71,28 +69,65 @@ var ColorPicker = (function() {
                         backgroundSize: "100% 100%",
                         backgroundImage: "url(Resources/ColorPickerOverlay.png)"
                     }}/>
-                <FancySlider minX={0} maxX={360}
-                    valueX={360 - this.state.hue}
+                <FancySlider knobClass="pixel-ui-slider-knob pixel-ui-shadowed"
+                    trackClass="pixel-ui-slider-track"
+                    minX={0} maxX={360} valueX={360 - this.state.hue}
                     onChange={this.handleHueChange}
-                    knobStyle={{
+                    trackStyle={{
                         position: "absolute",
-                        top: -10,
-                        left: -10,
-                        width: 20,
-                        height: 20,
-                        borderRadius: "50%",
-                        border: "5px solid #f8f8f8",
-                        backgroundColor: `hsla(${this.state.hue}, 100%, 50%, 1.0)`
-                    }} trackStyle={{
-                        position: "absolute",
-                        top: "55%",
-                        left: "5%",
-                        width: "90%",
-                        height: "0.75em",
-                        borderRadius: "0.375em",
+                        top: "60%",
+                        left: "30%",
+                        width: "60%",
+                        height: "1em",
                         backgroundSize: "100% 100%",
                         backgroundImage: "url(Resources/ColorPickerTrack.png)"
+                    }}
+                    knobStyle={makeKnobStyle(
+                        `hsla(${this.state.hue}, 100%, 50%, 1.0)`, "-0.25em",
+                        "-0.75em")}/>
+                <CheckerBoard rows={2} columns={50}
+                    class="pixel-ui-slider-track" style={{
+                        position: "absolute",
+                        top: "75%",
+                        left: "30%",
+                        width: "60%",
+                        height: "1em"
                     }}/>
+                <FancySlider knobClass="pixel-ui-slider-knob pixel-ui-shadowed"
+                    trackClass="pixel-ui-slider-track"
+                    minX={0} maxX={1.0} valueX={this.state.alpha}
+                    onChange={this.handleAlphaChange}
+                    trackStyle={{
+                        position: "absolute",
+                        top: "75%",
+                        left: "30%",
+                        width: "60%",
+                        height: "1em",
+                        backgroundSize: "100% 100%",
+                        backgroundImage: "url(Resources/AlphaOverlay.png)"
+                    }}
+                    knobStyle={makeKnobStyle(
+                        `hsla(0, 0%, 0%, ${this.state.alpha})`, "-0.25em",
+                        "-0.75em")}/>
+                <CheckerBoard class="pixel-ui-slider-knob"
+                    style={{
+                        position: "absolute",
+                        left: "10%",
+                        top: "60%",
+                        width: "10%",
+                        height: "10%"
+                    }}/>
+                <div className="pixel-ui-slider-knob" style={{
+                    position: "absolute",
+                    left: "10%",
+                    top: "60%",
+                    width: "10%",
+                    height: "10%",
+                    backgroundColor: `hsla(${this.state.hue},` +
+                        `${this.state.saturation}%,` +
+                        `${this.state.lightness}%,` +
+                        `${this.state.alpha})`
+                }}></div>
             </div>
         },
         handleHueChange(val) {
@@ -115,6 +150,17 @@ var ColorPicker = (function() {
             this.setState({
                 saturation: saturation,
                 lightness: lightness
+            });
+            this.props.onChange({
+                hue: this.state.hue,
+                saturation: this.state.saturation,
+                lightness: this.state.lightness,
+                alpha: this.state.alpha
+            });
+        },
+        handleAlphaChange(val) {
+            this.setState({
+                alpha: val.x
             });
             this.props.onChange({
                 hue: this.state.hue,

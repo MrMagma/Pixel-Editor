@@ -9,6 +9,34 @@
 #main-container > canvas {
   margin: 1em;
 }
+.pixel-ui-box {
+  border: 1px solid #ccc;
+  background-color: #f2f2f2;
+  border-radius: 0.2em;
+}
+.pixel-ui-slider-knob {
+  border: 3px solid #f8f8f8;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #ccc;
+}
+.pixel-ui-slider-knob.pixel-ui-shadowed {
+  box-shadow: 0 0 0 1px #ccc, 0 0 6px 0 #000;
+  -webkit-transition: box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease;
+}
+.pixel-ui-slider-knob.pixel-ui-shadowed:hover {
+  box-shadow: 0 0 0 1px #ccc, 0 1px 7px 0 #000;
+}
+.pixel-ui-slider-knob.pixel-ui-shadowed:active {
+  box-shadow: 0 0 0 1px #ccc, 0 2px 7px 0 #000;
+}
+.pixel-ui-slider-track {
+  border: 1px solid #ccc;
+  border-radius: 0.25em;
+}
+.round {
+  border-radius: 50%;
+}
 .pixel-canvas-layer {
   cursor: pointer;
 }

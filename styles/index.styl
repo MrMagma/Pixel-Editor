@@ -1,3 +1,8 @@
+box-shadow()
+    -webkit-box-shadow arguments
+    -moz-box-shadow arguments
+    box-shadow arguments
+
 #main-container
     position absolute
     top 0
@@ -7,6 +12,34 @@
     margin 2em
     & > canvas
         margin 1em
+
+.pixel-ui-box
+    border 1px solid hsl(0, 0%, 80%)
+    background-color hsl(0, 0%, 95%)
+    border-radius 0.2em
+
+.pixel-ui-slider-knob
+    shadow-border-spoof = 0 0 0 1px hsl(0, 0%, 80%)
+    border 3px solid #f8f8f8
+    border-radius 50%
+    box-shadow shadow-border-spoof
+    &.pixel-ui-shadowed
+        box-shadow shadow-border-spoof,
+            0 0 6px 0 hsl(0, 0, 0)
+        transition box-shadow 0.2s ease
+    &.pixel-ui-shadowed:hover
+        box-shadow shadow-border-spoof,
+            0 1px 7px 0 hsl(0, 0, 0)
+    &.pixel-ui-shadowed:active
+        box-shadow shadow-border-spoof,
+            0 2px 7px 0 hsl(0, 0, 0)
+            
+.pixel-ui-slider-track
+    border 1px solid hsl(0, 0%, 80%)
+    border-radius 0.25em
+
+.round
+    border-radius 50%
 
 .pixel-canvas-layer
     cursor pointer

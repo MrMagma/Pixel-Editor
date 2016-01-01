@@ -36,7 +36,10 @@ var FancySlider = (function () {
                 trackStyle: {},
                 onChange: function onChange() {},
                 onDragStart: function onDragStart() {},
-                onDragEnd: function onDragEnd() {}
+                onDragEnd: function onDragEnd() {},
+
+                trackClass: "",
+                knobClass: ""
             };
         },
         getInitialState: function getInitialState() {
@@ -57,7 +60,8 @@ var FancySlider = (function () {
         render: function render() {
             return React.createElement(
                 "div",
-                { ref: "node", style: this.props.trackStyle,
+                { className: this.props.trackClass,
+                    ref: "node", style: this.props.trackStyle,
                     onMouseDown: this.startDrag },
                 React.createElement(
                     "div",
@@ -66,7 +70,8 @@ var FancySlider = (function () {
                             left: ((this.state.valueX - this.props.minX) / (this.props.maxX - this.props.minX) * 100 || 0) + "%",
                             position: "absolute"
                         } },
-                    React.createElement("div", { style: this.props.knobStyle })
+                    React.createElement("div", { className: this.props.knobClass,
+                        style: this.props.knobStyle })
                 )
             );
         },
