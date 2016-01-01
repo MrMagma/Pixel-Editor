@@ -49,7 +49,12 @@ var ColorPicker = (function() {
                     left: 0,
                     height: "50%",
                     width: "100%",
-                    background: `hsla(${this.state.hue}, 100%, 50%, 1.0)`
+                    background: "hsla(" + [
+                        this.state.hue,
+                        "100%",
+                        "50%",
+                        1
+                    ].join(",") + ")"
                 }}></div>
                 <FancySlider knobClass="pixel-ui-slider-knob pixel-ui-shadowed"
                     minX={0} maxX={100} minY={0} maxY={100}
@@ -57,9 +62,12 @@ var ColorPicker = (function() {
                     valueY={100 - (this.state.lightness /
                         (1 - this.state.saturation / 200))}
                     onChange={this.handleSLChange}
-                    knobStyle={makeKnobStyle(`hsla(${this.state.hue},` +
-                        `${this.state.saturation}%,` +
-                        `${this.state.lightness}%, 1.0)`, "-0.75em", "-0.75em")}
+                    knobStyle={makeKnobStyle("hsla(" + [
+                        this.state.hue,
+                        this.state.saturation + "%",
+                        this.state.lightness + "%",
+                        1
+                    ].join(",") + ")", "-0.75em", "-0.75em")}
                     trackStyle={{
                         position: "absolute",
                         top: 0,
@@ -82,9 +90,12 @@ var ColorPicker = (function() {
                         backgroundSize: "100% 100%",
                         backgroundImage: "url(Resources/ColorPickerTrack.png)"
                     }}
-                    knobStyle={makeKnobStyle(
-                        `hsla(${this.state.hue}, 100%, 50%, 1.0)`, "-0.25em",
-                        "-0.75em")}/>
+                    knobStyle={makeKnobStyle("hsla(" + [
+                            this.state.hue,
+                            "100%",
+                            "50%",
+                            "1.0"
+                        ].join(",") + ")", "-0.25em", "-0.75em")}/>
                 <CheckerBoard rows={2} columns={50}
                     class="pixel-ui-slider-track" style={{
                         position: "absolute",
@@ -94,7 +105,8 @@ var ColorPicker = (function() {
                         height: "1em"
                     }}/>
                 <FancySlider knobClass="pixel-ui-slider-knob pixel-ui-shadowed"
-                    trackClass="pixel-ui-slider-track"
+                    trackClass={"pixel-ui-slider-track " +
+                        "pixel-ui-vertical-alpha-overlay"}
                     minX={0} maxX={1.0} valueX={this.state.alpha}
                     onChange={this.handleAlphaChange}
                     trackStyle={{
@@ -104,11 +116,26 @@ var ColorPicker = (function() {
                         width: "60%",
                         height: "1em",
                         backgroundSize: "100% 100%",
-                        backgroundImage: "url(Resources/AlphaOverlay.png)"
+                        backgroundImage: "linear-gradient(to left, hsla(" + [
+                            this.state.hue,
+                            this.state.saturation + "%",
+                            this.state.lightness + "%",
+                            1
+                        ].join(",") + "),hsla(" + [
+                            this.state.hue,
+                            this.state.saturation + "%",
+                            this.state.lightness + "%",
+                            0
+                        ].join(",") + "))"
                     }}
                     knobStyle={makeKnobStyle(
-                        `hsla(0, 0%, 0%, ${this.state.alpha})`, "-0.25em",
-                        "-0.75em")}/>
+                        "hsla(" + [
+                            this.state.hue,
+                            this.state.saturation + "%",
+                            this.state.lightness + "%",
+                            this.state.alpha
+                        ].join(",") + ")",
+                            "-0.25em", "-0.75em")}/>
                 <CheckerBoard class="pixel-ui-slider-knob"
                     style={{
                         position: "absolute",
