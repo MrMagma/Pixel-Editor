@@ -1,7 +1,6 @@
 var PixelCanvas = (function() {
     
     var React = require("react");
-    var ReactDOM = require("react-dom");
     
     var CanvasStore = require("../Stores/CanvasStore.js");
     var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
@@ -34,9 +33,6 @@ var PixelCanvas = (function() {
             window.addEventListener("resize", this.handleResize);
         },
         componentDidMount() {
-            // Get the DOM node associated with this component so we can do stuff,
-            // and update our dimensions
-            this.node = ReactDOM.findDOMNode(this);
             this.updateDimensions();
         },
         componentWillUnmount() {
@@ -51,7 +47,7 @@ var PixelCanvas = (function() {
             
             // Render a div with one child PixelLayer for every layer, and an extra
             // one for whatever layer is active at any point in time
-            return <div style={{
+            return <div ref="node" style={{
                 position: "absolute",
                 top: this.props.y,
                 left: this.props.x,
@@ -79,7 +75,8 @@ var PixelCanvas = (function() {
         updateDimensions() {
             // Update our stored size.
             this.setState({
-                pxSize: Math.min(this.node.offsetWidth, this.node.offsetHeight)
+                pxSize: Math.min(this.refs.node.offsetWidth,
+                    this.refs.node.offsetHeight)
             });
             
             // Clear the resize timeout

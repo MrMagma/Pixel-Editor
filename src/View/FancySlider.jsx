@@ -1,7 +1,6 @@
 var FancySlider = (function() {
     
     var React = require("react");
-    var ReactDOM = require("react-dom");
     
     var dragging = false;
     var lastDragUpdate = -Infinity;

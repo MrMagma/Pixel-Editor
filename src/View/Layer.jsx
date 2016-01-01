@@ -1,7 +1,6 @@
 var PixelLayer = (function() {
     
     var React = require("react");
-    var ReactDOM = require("react-dom");
     
     var CanvasStore = require("../Stores/CanvasStore.js");
     var CanvasDispatcher = require("../Dispatcher/CanvasDispatcher.js");
@@ -49,7 +48,7 @@ var PixelLayer = (function() {
                 callback: this.handlePixelChange
             });
             document.addEventListener("mouseup", this.endDrag);
-            this.context = ReactDOM.findDOMNode(this).getContext("2d");
+            this.context = this.refs.node.getContext("2d");
         },
         componentWillUnmount() {
             CanvasStore.offDimensionChange({
@@ -65,7 +64,7 @@ var PixelLayer = (function() {
             this.paint();
         },
         render() {
-            return <canvas style={{
+            return <canvas ref="node" style={{
                 position: "absolute",
                 top: 0,
                 left: 0
