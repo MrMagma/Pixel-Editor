@@ -15,6 +15,9 @@ var CheckerBoard = (function() {
         componentDidMount() {
             this.paint(this.refs.node.getContext("2d"));
         },
+        componentDidUpdate() {
+            this.paint(this.refs.node.getContext("2d"));
+        },
         render() {
             return <canvas ref="node" className={this.props.class}
                 style={this.props.style}/>;
@@ -22,8 +25,8 @@ var CheckerBoard = (function() {
         paint(ctx) {
             let w = this.refs.node.offsetWidth,
                 h = this.refs.node.offsetHeight;
-            let canvasW = this.refs.node.width;
-            let canvasH = this.refs.node.height;
+            this.refs.node.width = w;
+            this.refs.node.height = h;
             let squareSz;
             
             if (w > h) {
@@ -43,9 +46,8 @@ var CheckerBoard = (function() {
                     } else {
                         ctx.fillStyle = this.props.color2;
                     }
-                    ctx.fillRect(squareSz * x / w * canvasW,
-                        squareSz * y / h * canvasH,
-                        squareSz / w * canvasW, squareSz / h * canvasH);
+                    ctx.fillRect(squareSz * x, squareSz * y,
+                        squareSz, squareSz);
                 }
             }
         }

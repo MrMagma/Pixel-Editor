@@ -7,6 +7,7 @@ var PixelCanvas = (function() {
     var constants = require("../Constants.js");
     
     var PixelLayer = require("./Layer.jsx");
+    var CheckerBoard = require("./CheckerBoard.jsx");
 
     /*
      The PixelCanvas component represents one pixel image. It is composed of
@@ -25,19 +26,25 @@ var PixelCanvas = (function() {
         },
         getInitialState() {
             return {
-                pxSize: 1
+                pxSize: 1,
+                canvasWidth: CanvasStore.getWidth(),
+                canvasHeight: CanvasStore.getHeight()
             };
         },
-        componentWillMount() {
+        componentDidMount() {
             // Listen for resize events
             window.addEventListener("resize", this.handleResize);
-        },
-        componentDidMount() {
+            CanvasStore.onDimensionChange({
+                callback: this.handleDimChange
+            });
             this.updateDimensions();
         },
         componentWillUnmount() {
             // We don't need our listener any more if we're no longer on the DOM
             window.removeEventListener("resize", this.handleResize);
+            CanvasStore.offDimensionChange({
+                callback: this.handleDimChange
+            });
         },
         render() {
             // Reset the numLayers data
@@ -54,6 +61,15 @@ var PixelCanvas = (function() {
                 width: this.props.width,
                 height: this.props.height
             }}>
+                <CheckerBoard style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: this.state.pxSize,
+                    height: this.state.pxSize
+                }}
+                    rows={this.state.canvasWidth * 2}
+                    columns={this.state.canvasHeight * 2}/>
                 {layers.map((layer, index) => {
                     let ret = <PixelLayer key={index} ref={`layer-${index}`}
                         layerName={layer} pxSize={this.state.pxSize}/>;
@@ -62,7 +78,8 @@ var PixelCanvas = (function() {
                 })}
                 <PixelLayer layerName="current"
                     ref={`layer-${this.numLayers++}`}
-                    pxSize={this.state.pxSize}/>
+                    pxSize={this.state.pxSize}
+                    noRender={true}/>
             </div>
         },
         handleResize() {
@@ -71,6 +88,12 @@ var PixelCanvas = (function() {
             if (!this.resizeTimeout) {
                 this.resizeTimeout = setTimeout(this.updateDimensions, 1000);
             }
+        },
+        handleDimChange() {
+            this.setState({
+                canvasWidth: CanvasStore.getWidth(),
+                canvasHeight: CanvasStore.getHeight()
+            });
         },
         updateDimensions() {
             // Update our stored size.

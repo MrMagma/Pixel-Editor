@@ -9,6 +9,7 @@ var PixelCanvas = (function () {
     var constants = require("../Constants.js");
 
     var PixelLayer = require("./Layer.jsx");
+    var CheckerBoard = require("./CheckerBoard.jsx");
 
     /*
      The PixelCanvas component represents one pixel image. It is composed of
@@ -28,19 +29,25 @@ var PixelCanvas = (function () {
         },
         getInitialState: function getInitialState() {
             return {
-                pxSize: 1
+                pxSize: 1,
+                canvasWidth: CanvasStore.getWidth(),
+                canvasHeight: CanvasStore.getHeight()
             };
         },
-        componentWillMount: function componentWillMount() {
+        componentDidMount: function componentDidMount() {
             // Listen for resize events
             window.addEventListener("resize", this.handleResize);
-        },
-        componentDidMount: function componentDidMount() {
+            CanvasStore.onDimensionChange({
+                callback: this.handleDimChange
+            });
             this.updateDimensions();
         },
         componentWillUnmount: function componentWillUnmount() {
             // We don't need our listener any more if we're no longer on the DOM
             window.removeEventListener("resize", this.handleResize);
+            CanvasStore.offDimensionChange({
+                callback: this.handleDimChange
+            });
         },
         render: function render() {
             var _this = this;
@@ -61,6 +68,15 @@ var PixelCanvas = (function () {
                         width: this.props.width,
                         height: this.props.height
                     } },
+                React.createElement(CheckerBoard, { style: {
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: this.state.pxSize,
+                        height: this.state.pxSize
+                    },
+                    rows: this.state.canvasWidth * 2,
+                    columns: this.state.canvasHeight * 2 }),
                 layers.map(function (layer, index) {
                     var ret = React.createElement(PixelLayer, { key: index, ref: "layer-" + index,
                         layerName: layer, pxSize: _this.state.pxSize });
@@ -69,7 +85,8 @@ var PixelCanvas = (function () {
                 }),
                 React.createElement(PixelLayer, { layerName: "current",
                     ref: "layer-" + this.numLayers++,
-                    pxSize: this.state.pxSize })
+                    pxSize: this.state.pxSize,
+                    noRender: true })
             );
         },
         handleResize: function handleResize() {
@@ -78,6 +95,12 @@ var PixelCanvas = (function () {
             if (!this.resizeTimeout) {
                 this.resizeTimeout = setTimeout(this.updateDimensions, 1000);
             }
+        },
+        handleDimChange: function handleDimChange() {
+            this.setState({
+                canvasWidth: CanvasStore.getWidth(),
+                canvasHeight: CanvasStore.getHeight()
+            });
         },
         updateDimensions: function updateDimensions() {
             // Update our stored size.

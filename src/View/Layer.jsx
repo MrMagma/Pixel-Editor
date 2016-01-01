@@ -119,21 +119,29 @@ var PixelLayer = (function() {
             });
         },
         paintPixel(canvasX, canvasY) {
-            let pxSz = Math.floor(this.props.pxSize / this.state.canvasSize);
-            this.context.clearRect(canvasX * pxSz, canvasY * pxSz, pxSz, pxSz);
-            this.context.fillStyle = CanvasStore.getPixelHSL({
-                x: canvasX,
-                y: canvasY,
-                layer: this.trueLayerName()
-            });
-            this.context.fillRect(canvasX * pxSz, canvasY * pxSz, pxSz, pxSz);
+            if (!this.props.noRender) {
+                let pxSz = Math
+                    .floor(this.props.pxSize / this.state.canvasSize);
+                this.context
+                    .clearRect(canvasX * pxSz, canvasY * pxSz, pxSz, pxSz);
+                this.context.fillStyle = CanvasStore.getPixelHSL({
+                    x: canvasX,
+                    y: canvasY,
+                    layer: this.trueLayerName()
+                });
+                this.context
+                    .fillRect(canvasX * pxSz, canvasY * pxSz, pxSz, pxSz);
+            }
         },
         paint() {
-            this.context.clearRect(0, 0, this.props.pxSize, this.props.pxSize);
-            let w = this.state.canvasWidth, h = this.state.canvasHeight;
-            for (let x = 0; x < w; x++) {
-                for (let y = 0; y < h; y++) {
-                    this.paintPixel(x, y);
+            if (!this.props.noRender) {
+                this.context.clearRect(0, 0, this.props.pxSize,
+                    this.props.pxSize);
+                let w = this.state.canvasWidth, h = this.state.canvasHeight;
+                for (let x = 0; x < w; x++) {
+                    for (let y = 0; y < h; y++) {
+                        this.paintPixel(x, y);
+                    }
                 }
             }
         }
