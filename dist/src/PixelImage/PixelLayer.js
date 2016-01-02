@@ -18,11 +18,14 @@ var PixelLayer = (function () {
             var width = _cfg$width === undefined ? 1 : _cfg$width;
             var _cfg$height = cfg.height;
             var height = _cfg$height === undefined ? 1 : _cfg$height;
+            var _cfg$z = cfg.z;
+            var z = _cfg$z === undefined ? 0 : _cfg$z;
             var name = cfg.name;
 
             this.layerName = name;
             this.width = width;
             this.height = height;
+            this.z = z;
 
             this.pixelMap = [];
 
@@ -49,6 +52,11 @@ var PixelLayer = (function () {
                     // but it will teach whoever made that mistake their lesson.
                     throw new RangeError("Coordinates (" + x + ", " + y + ") are out of range");
                 }
+            }
+        }, {
+            key: "getZ",
+            value: function getZ() {
+                return this.z;
             }
         }, {
             key: "setPixelHSL",
@@ -106,6 +114,13 @@ var PixelLayer = (function () {
 
                 this.setWidth(width);
                 this.setHeight(height);
+            }
+        }, {
+            key: "setZ",
+            value: function setZ(v) {
+                if (_.isNumber(v) && !_.isNaN(v)) {
+                    this.z = v;
+                }
             }
         }]);
 

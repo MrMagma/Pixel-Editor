@@ -8,7 +8,8 @@ var PixelImage = (function() {
             this.currentLayer = "main";
             this.layers = {
                 main: new PixelLayer({
-                    name: "main"
+                    name: "main",
+                    z: 0
                 })
             };
             
@@ -30,15 +31,74 @@ var PixelImage = (function() {
         addLayer(name) {
             if (this.validLayerName(name)) {
                 this.layers[name] = new PixelLayer({
-                    name: name
+                    name: name,
+                    z: this.layers[this.layerNames
+                        [this.layerNames.length - 1]].getZ() + 1
                 });
+                this.layerNames.unshift(name);
             }
+        }
+        sortLayers() {
+            this.layerNames = this.layerNames.sort((layer1, layer2) => {
+                return this.layers[layer1].getZ() - this.layers[layer2].getZ();
+            });
+        }
+        moveLayerUp(layer) {
+            let ind = this.layerNames.indexOf(layer);
+            if (ind === this.layerNames.length - 1) {
+                this.getLayer(layer).z += 1;
+            } else {
+                let layer2 = this.getLayer(this.layerNames[ind + 1]);
+                this.moveLayerAbove(layer, layer2);
+            }
+        }
+        moveLayerDown(layer) {
+            let ind = this.layerNames.indexOf(layer);
+            if (ind === 0) {
+                this.getLayer(layer).z -= 1;
+            } else {
+                let layer2 = this.getLayer(this.layerNames[ind - 1]);
+                this.moveLayerBelow(layer, layer2);
+            }                
+        }
+        moveLayerAbove(layer1, layer2) {
+            this.getLayer(layer1).setZ(this.getLayer(layer2).getZ() + 1);
+            this.sortLayers();
+        }
+        moveLayerBelow(layer1, layer2) {
+            this.getLayer(layer1).setZ(this.getLayer(layer2).getZ() - 1);
+            this.sortLayers();
+        }
+        swapLayers(layer1, layer2) {
+            layer1 = this.getLayer(layer1),
+            layer2 = this.getLayer(layer2);
+            
+            let z1 = layer1.getZ(),
+                z2 = layer2.getZ();
+                
+            layer1.setZ(z2);
+            layer2.setZ(z1);
+            
+            this.sortLayers();
         }
         getLayer(name = "current") {
             return this.layers[name];
         }
         getLayers() {
             return this.layerNames;
+        }
+        getLayerZ(name = "current") {
+            if (name === "current") {
+                name = this.layers.current.layerName;
+            }
+            return this.layerNames.indexOf(name);
+        }
+        setLayerZ(name = "current", z) {
+            if (name === "current") {
+                name = this.layers.current.layerName;
+            }
+            this.layers[name].setZ(z);
+            this.sortLayers();
         }
         setDimensions({width = this.width, height = this.height}) {
             for (let layerName of this.layerNames) {

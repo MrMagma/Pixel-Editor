@@ -50,6 +50,27 @@ var CanvasStore = (function () {
         getBrushColor: function getBrushColor() {
             return [brushColor[0], brushColor[1], brushColor[2], brushColor[3]];
         },
+        getLayerZ: function getLayerZ(layer) {
+            return pixelImage.getLayerZ(layer);
+        },
+        moveLayerUp: function moveLayerUp(layer) {
+            pixelImage.moveLayerUp(layer);
+        },
+        moveLayerDown: function moveLayerDown(layer) {
+            pixelImage.moveLayerDown(layer);
+        },
+        moveLayerBelow: function moveLayerBelow(layer1, layer2) {
+            pixelImage.moveLayerBelow(layer1, layer2);
+        },
+        moveLayerAbove: function moveLayerAbove(layer1, layer2) {
+            pixelImage.moveLayerAbove(layer1, layer2);
+        },
+        moveLayerTo: function moveLayerTo(layer, pos) {
+            pixelImage.setLayerZ(layer, pos);
+        },
+        swapLayers: function swapLayers(layer1, layer2) {
+            pixelImage.swapLayers(layer1, layer2);
+        },
         setPixel: function setPixel(action) {
             var layerName = action.layerName;
             var x = action.x;

@@ -16,7 +16,8 @@ var PixelImage = (function () {
             this.currentLayer = "main";
             this.layers = {
                 main: new PixelLayer({
-                    name: "main"
+                    name: "main",
+                    z: 0
                 })
             };
 
@@ -42,9 +43,67 @@ var PixelImage = (function () {
             value: function addLayer(name) {
                 if (this.validLayerName(name)) {
                     this.layers[name] = new PixelLayer({
-                        name: name
+                        name: name,
+                        z: this.layers[this.layerNames[this.layerNames.length - 1]].getZ() + 1
                     });
+                    this.layerNames.unshift(name);
                 }
+            }
+        }, {
+            key: "sortLayers",
+            value: function sortLayers() {
+                var _this = this;
+
+                this.layerNames = this.layerNames.sort(function (layer1, layer2) {
+                    return _this.layers[layer1].getZ() - _this.layers[layer2].getZ();
+                });
+            }
+        }, {
+            key: "moveLayerUp",
+            value: function moveLayerUp(layer) {
+                var ind = this.layerNames.indexOf(layer);
+                if (ind === this.layerNames.length - 1) {
+                    this.getLayer(layer).z += 1;
+                } else {
+                    var layer2 = this.getLayer(this.layerNames[ind + 1]);
+                    this.moveLayerAbove(layer, layer2);
+                }
+            }
+        }, {
+            key: "moveLayerDown",
+            value: function moveLayerDown(layer) {
+                var ind = this.layerNames.indexOf(layer);
+                if (ind === 0) {
+                    this.getLayer(layer).z -= 1;
+                } else {
+                    var layer2 = this.getLayer(this.layerNames[ind - 1]);
+                    this.moveLayerBelow(layer, layer2);
+                }
+            }
+        }, {
+            key: "moveLayerAbove",
+            value: function moveLayerAbove(layer1, layer2) {
+                this.getLayer(layer1).setZ(this.getLayer(layer2).getZ() + 1);
+                this.sortLayers();
+            }
+        }, {
+            key: "moveLayerBelow",
+            value: function moveLayerBelow(layer1, layer2) {
+                this.getLayer(layer1).setZ(this.getLayer(layer2).getZ() - 1);
+                this.sortLayers();
+            }
+        }, {
+            key: "swapLayers",
+            value: function swapLayers(layer1, layer2) {
+                layer1 = this.getLayer(layer1), layer2 = this.getLayer(layer2);
+
+                var z1 = layer1.getZ(),
+                    z2 = layer2.getZ();
+
+                layer1.setZ(z2);
+                layer2.setZ(z1);
+
+                this.sortLayers();
             }
         }, {
             key: "getLayer",
@@ -57,6 +116,28 @@ var PixelImage = (function () {
             key: "getLayers",
             value: function getLayers() {
                 return this.layerNames;
+            }
+        }, {
+            key: "getLayerZ",
+            value: function getLayerZ() {
+                var name = arguments.length <= 0 || arguments[0] === undefined ? "current" : arguments[0];
+
+                if (name === "current") {
+                    name = this.layers.current.layerName;
+                }
+                return this.layerNames.indexOf(name);
+            }
+        }, {
+            key: "setLayerZ",
+            value: function setLayerZ() {
+                var name = arguments.length <= 0 || arguments[0] === undefined ? "current" : arguments[0];
+                var z = arguments[1];
+
+                if (name === "current") {
+                    name = this.layers.current.layerName;
+                }
+                this.layers[name].setZ(z);
+                this.sortLayers();
             }
         }, {
             key: "setDimensions",
