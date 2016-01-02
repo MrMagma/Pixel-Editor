@@ -5,8 +5,8 @@ require("babel-polyfill");
 var React = require("react");
 var ReactDOM = require("react-dom");
 
-var PixelCanvas = require("./View/Canvas.jsx");
-var ColorPicker = require("./View/ColorPicker.jsx");
+var PixelCanvas = require("./Components/Canvas.jsx");
+var ColorPicker = require("./Components/ColorPicker.jsx");
 var CanvasStore = require("./Stores/CanvasStore.js");
 var CanvasDispatcher = require("./Dispatcher/CanvasDispatcher.js");
 var constants = require("./Constants.js");
