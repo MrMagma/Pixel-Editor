@@ -15,7 +15,7 @@ var PixelLayer = (function() {
         return {
             canvasWidth: w,
             canvasHeight: h,
-            canvasSize: Math.min(w, h)
+            canvasSize: Math.max(w, h)
         };
     }
     
@@ -135,8 +135,6 @@ var PixelLayer = (function() {
         },
         paint() {
             if (!this.props.noRender) {
-                this.context.clearRect(0, 0, this.props.pxSize,
-                    this.props.pxSize);
                 let w = this.state.canvasWidth, h = this.state.canvasHeight;
                 for (let x = 0; x < w; x++) {
                     for (let y = 0; y < h; y++) {

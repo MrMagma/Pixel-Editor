@@ -36,13 +36,7 @@ var ColorPicker = (function() {
             };
         },
         render() {
-            return <div className="pixel-ui-box" style={{
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                width: 250,
-                height: 250,
-            }}>
+            return <div className={this.props.class} style={this.props.style}>
                 <div style={{
                     position: "absolute",
                     top: 0,

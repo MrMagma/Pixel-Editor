@@ -38,13 +38,7 @@ var ColorPicker = (function () {
         render: function render() {
             return React.createElement(
                 "div",
-                { className: "pixel-ui-box", style: {
-                        position: "absolute",
-                        bottom: 0,
-                        right: 0,
-                        width: 250,
-                        height: 250
-                    } },
+                { className: this.props.class, style: this.props.style },
                 React.createElement("div", { style: {
                         position: "absolute",
                         top: 0,

@@ -1,17 +1,14 @@
+*
+    margin 0
+    padding 0
+
 box-shadow()
     -webkit-box-shadow arguments
     -moz-box-shadow arguments
     box-shadow arguments
 
-#main-container
-    position absolute
-    top 0
-    left 0
-    bottom 0
-    right 0
-    margin 2em
-    & > canvas
-        margin 1em
+.pixel-ui-container
+    overflow hidden
 
 .pixel-ui-box
     border 1px solid hsl(0, 0%, 80%)
@@ -40,6 +37,15 @@ box-shadow()
 
 .pixel-ui-vertical-alpha-overlay
     background url(../../Resources/AlphaOverlay.png)
+    
+.pixel-ui-right-side-controls
+    position absolute
+    top 0
+    left 50%
+    bottom 0
+    right 0
+    border-left 1px solid hsl(0, 0%, 80%)
+    background-color hsl(0, 0%, 95%)
 
 .round
     border-radius 50%

@@ -1,13 +1,9 @@
-#main-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  margin: 2em;
+* {
+  margin: 0;
+  padding: 0;
 }
-#main-container > canvas {
-  margin: 1em;
+.pixel-ui-container {
+  overflow: hidden;
 }
 .pixel-ui-box {
   border: 1px solid #ccc;
@@ -36,6 +32,15 @@
 }
 .pixel-ui-vertical-alpha-overlay {
   background: url("../../Resources/AlphaOverlay.png");
+}
+.pixel-ui-right-side-controls {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  bottom: 0;
+  right: 0;
+  border-left: 1px solid #ccc;
+  background-color: #f2f2f2;
 }
 .round {
   border-radius: 50%;

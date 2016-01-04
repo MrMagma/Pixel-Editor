@@ -27,33 +27,23 @@ ReactDOM.render(React.createElement(
     "div",
     null,
     React.createElement(PixelCanvas, null),
-    React.createElement(ColorPicker, { hue: startBrush[0], saturation: startBrush[1],
-        lightness: startBrush[2], alpha: startBrush[3],
-        onChange: onColorChange })
+    React.createElement(
+        "div",
+        { className: "pixel-ui-right-side-controls" },
+        React.createElement(ColorPicker, { "class": "pixel-ui-box", style: {
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                width: 250,
+                height: 250
+            }, hue: startBrush[0], saturation: startBrush[1],
+            lightness: startBrush[2], alpha: startBrush[3],
+            onChange: onColorChange, x: "1em", y: "1em" })
+    )
 ), mainContainer);
 
-// Limit all size increases to 128, as beyond that performance can become
-// rather iffy.
-function increaseSz() {
-    var curDim = CanvasStore.getDimensions();
-    CanvasStore.setDimensions({
-        width: curDim.width + 1,
-        height: curDim.height + 1
-    });
-    document.getElementById("sz").textContent = curDim.width + 1 + "x" + (curDim.height + 1);
-}
-
-function decreaseSz() {
-    var curDim = CanvasStore.getDimensions();
-    CanvasStore.setDimensions({
-        width: curDim.width - 1,
-        height: curDim.height - 1
-    });
-    document.getElementById("sz").textContent = curDim.width - 1 + "x" + (curDim.height - 1);
-}
-
-document.getElementById("increase").addEventListener("click", increaseSz);
-document.getElementById("decrease").addEventListener("click", decreaseSz);
+// NOTE (Joshua): Limit all size increases to 128, as beyond that performance
+// can become rather iffy.
 
 /* End sloppy stuff that will be removed in the near future and is currently
  just here for testing */
