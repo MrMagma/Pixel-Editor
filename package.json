@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "A react component for editing pixel art",
   "main": "index.js",
+  "repository": {
+      "type": "git",
+      "url": "git://github.com/JavascriptFTW/Pixel-Editor.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
